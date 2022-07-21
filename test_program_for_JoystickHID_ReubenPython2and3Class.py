@@ -6,22 +6,29 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision C, 05/21/2022
+Software Revision D, 07/20/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
 
 __author__ = 'reuben.brewer'
 
+#########################################################
 from JoystickHID_ReubenPython2and3Class import *
 from MyPrint_ReubenPython2and3Class import *
+#########################################################
 
-import os, sys, platform
-import time, datetime
+#########################################################
+import os
+import sys
+import platform
+import time
+import datetime
 import threading
 import collections
+#########################################################
 
-###############
+#########################################################
 if sys.version_info[0] < 3:
     from Tkinter import * #Python 2
     import tkFont
@@ -30,22 +37,22 @@ else:
     from tkinter import * #Python 3
     import tkinter.font as tkFont #Python 3
     from tkinter import ttk
-###############
+#########################################################
 
-###############
+#########################################################
 if sys.version_info[0] < 3:
     from builtins import raw_input as input
 else:
     from future.builtins import input as input #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
-###############
+#########################################################
 
-###############
+#########################################################
 import platform
 if platform.system() == "Windows":
     import ctypes
     winmm = ctypes.WinDLL('winmm')
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
-###############
+#########################################################
 
 ###########################################################################################################
 ##########################################################################################################
@@ -146,11 +153,11 @@ def GUI_Thread():
         #################################################
         TabControlObject = ttk.Notebook(root)
 
-        Tab_MainControls = ttk.Frame(TabControlObject)
-        TabControlObject.add(Tab_MainControls, text='   Main Controls   ')
-
         Tab_JOYSTICK = ttk.Frame(TabControlObject)
         TabControlObject.add(Tab_JOYSTICK, text='   JOYSTICK   ')
+
+        Tab_MainControls = ttk.Frame(TabControlObject)
+        TabControlObject.add(Tab_MainControls, text='   Main Controls   ')
 
         Tab_MyPrint = ttk.Frame(TabControlObject)
         TabControlObject.add(Tab_MyPrint, text='   MyPrint Terminal   ')
@@ -227,7 +234,7 @@ if __name__ == '__main__':
     USE_GUI_FLAG = 1
 
     global USE_TABS_IN_GUI_FLAG
-    USE_TABS_IN_GUI_FLAG = 0
+    USE_TABS_IN_GUI_FLAG = 1
 
     global USE_JOYSTICK_FLAG
     USE_JOYSTICK_FLAG = 1
@@ -259,7 +266,7 @@ if __name__ == '__main__':
 
     GUI_COLUMN_JOYSTICK = 0
     GUI_PADX_JOYSTICK = 1
-    GUI_PADY_JOYSTICK = 10
+    GUI_PADY_JOYSTICK = 1
     GUI_ROWSPAN_JOYSTICK = 1
     GUI_COLUMNSPAN_JOYSTICK = 1
 
@@ -273,7 +280,7 @@ if __name__ == '__main__':
 
     GUI_COLUMN_MYPRINT = 0
     GUI_PADX_MYPRINT = 1
-    GUI_PADY_MYPRINT = 10
+    GUI_PADY_MYPRINT = 1
     GUI_ROWSPAN_MYPRINT = 1
     GUI_COLUMNSPAN_MYPRINT = 1
     #################################################
@@ -296,7 +303,7 @@ if __name__ == '__main__':
     global root
 
     global root_Xpos
-    root_Xpos = 70
+    root_Xpos = 900
 
     global root_Ypos
     root_Ypos = 0
@@ -325,6 +332,7 @@ if __name__ == '__main__':
     JOYSTICK_OPEN_FLAG = -1
 
     global JOYSTICK_MostRecentDict
+    JOYSTICK_MostRecentDict = dict()
 
     global JOYSTICK_MostRecentDict_Joystick_Axis_Value_List
     JOYSTICK_MostRecentDict_Joystick_Axis_Value_List = list()
@@ -391,7 +399,7 @@ if __name__ == '__main__':
 
     global JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict
     JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_JOYSTICK_FLAG),
-                                    ("root", Tab_JOYSTICK), #root Tab_JOYSTICK
+                                    ("root", Tab_JOYSTICK),
                                     ("EnableInternal_MyPrint_Flag", 1),
                                     ("NumberOfPrintLines", 10),
                                     ("UseBorderAroundThisGuiObjectFlag", 0),
@@ -416,7 +424,6 @@ if __name__ == '__main__':
     if USE_JOYSTICK_FLAG == 1:
         try:
             JoystickHID_ReubenPython2and3ClassObject = JoystickHID_ReubenPython2and3Class(JoystickHID_ReubenPython2and3ClassObject_setup_dict)
-            time.sleep(0.25)
             JOYSTICK_OPEN_FLAG = JoystickHID_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
@@ -448,7 +455,6 @@ if __name__ == '__main__':
 
         try:
             MyPrint_ReubenPython2and3ClassObject = MyPrint_ReubenPython2and3Class(MyPrint_ReubenPython2and3ClassObject_setup_dict)
-            time.sleep(0.25)
             MYPRINT_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:

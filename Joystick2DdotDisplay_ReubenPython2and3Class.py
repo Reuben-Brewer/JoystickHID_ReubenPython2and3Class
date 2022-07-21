@@ -6,22 +6,26 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision C, 05/21/2022
+Software Revision D, 07/16/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
 
 __author__ = 'reuben.brewer'
 
-import os, sys, platform
+#################################################
+import os
+import sys
+import platform
 import time, datetime
 import math
 import collections
 import inspect #To enable 'TellWhichFileWereIn'
 import threading
 import traceback
+#################################################
 
-###############
+#################################################
 if sys.version_info[0] < 3:
     from Tkinter import * #Python 2
     import tkFont
@@ -30,29 +34,29 @@ else:
     from tkinter import * #Python 3
     import tkinter.font as tkFont #Python 3
     from tkinter import ttk
-###############
+#################################################
 
-###############
+#################################################
 if sys.version_info[0] < 3:
     import Queue  # Python 2
 else:
     import queue as Queue  # Python 3
-###############
+#################################################
 
-###############
+#################################################
 if sys.version_info[0] < 3:
     from builtins import raw_input as input
 else:
     from future.builtins import input as input
-############### #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
+################################################# #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
 
-###############
+#################################################
 import platform
 if platform.system() == "Windows":
     import ctypes
     winmm = ctypes.WinDLL('winmm')
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
-###############
+#################################################
 
 class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
@@ -103,12 +107,9 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
             ##########################################
             if "root" in self.GUIparametersDict:
                 self.root = self.GUIparametersDict["root"]
-                self.RootIsOwnedExternallyFlag = 1
             else:
-                self.root = None
-                self.RootIsOwnedExternallyFlag = 0
-
-            print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: RootIsOwnedExternallyFlag: " + str(self.RootIsOwnedExternallyFlag))
+                print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: ERROR, must pass in 'root'")
+                return
             ##########################################
 
             ##########################################
@@ -151,7 +152,7 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
             if "GUI_ROWSPAN" in self.GUIparametersDict:
                 self.GUI_ROWSPAN = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_ROWSPAN", self.GUIparametersDict["GUI_ROWSPAN"], 0.0, 1000.0))
             else:
-                self.GUI_ROWSPAN = 0
+                self.GUI_ROWSPAN = 1
 
             print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: GUI_ROWSPAN: " + str(self.GUI_ROWSPAN))
             ##########################################
@@ -160,7 +161,7 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
             if "GUI_COLUMNSPAN" in self.GUIparametersDict:
                 self.GUI_COLUMNSPAN = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_COLUMNSPAN", self.GUIparametersDict["GUI_COLUMNSPAN"], 0.0, 1000.0))
             else:
-                self.GUI_COLUMNSPAN = 0
+                self.GUI_COLUMNSPAN = 1
 
             print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: GUI_COLUMNSPAN: " + str(self.GUI_COLUMNSPAN))
             ##########################################
@@ -230,10 +231,12 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
         #################################################
         #################################################
 
+        #################################################
+        #################################################
         self.GUI_ready_to_be_updated_flag = 1
         self.OBJECT_CREATED_SUCCESSFULLY_FLAG = 1
-        #########################################################
-        #########################################################
+        #################################################
+        #################################################
 
     #######################################################################################################################
     #######################################################################################################################

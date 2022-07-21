@@ -6,48 +6,53 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision G, 03/13/2022
+Software Revision H, 07/16/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
 
 __author__ = 'reuben.brewer'
 
-import os, sys, platform
-import time, datetime
+#########################################################
+import os
+import sys
+import platform
+import time
+import datetime
 import traceback
 import threading
+#########################################################
 
-###############
+#########################################################
 if sys.version_info[0] < 3:
     from Tkinter import * #Python 2
     import tkFont
 else:
     from tkinter import * #Python 3
     import tkinter.font as tkFont #Python 3
-###############
+#########################################################
 
-###############
+#########################################################
 if sys.version_info[0] < 3:
     import Queue  # Python 2
 else:
     import queue as Queue  # Python 3
-###############
+#########################################################
 
-###############
+#########################################################
 if sys.version_info[0] < 3:
     from builtins import raw_input as input
 else:
     from future.builtins import input as input #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
-###############
+#########################################################
 
-###############
+#########################################################
 import platform
 if platform.system() == "Windows":
     import ctypes
     winmm = ctypes.WinDLL('winmm')
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
-###############
+#########################################################
 
 ##########################################################################################################
 ##########################################################################################################
@@ -60,8 +65,8 @@ class MyPrint_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         self.OBJECT_CREATED_SUCCESSFULLY_FLAG = -1
         self.EXIT_PROGRAM_FLAG = 0
 
-        ##########################################
-        ##########################################
+        #########################################################
+        #########################################################
         if platform.system() == "Linux":
 
             if "raspberrypi" in platform.uname(): #os.uname() doesn't work in windows
@@ -79,185 +84,211 @@ class MyPrint_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
             self.my_platform = "other"
 
         print("The OS platform is: " + self.my_platform)
-        ##########################################
-        ##########################################
+        #########################################################
+        #########################################################
 
-        ##########################################
-        ##########################################
+        #########################################################
+        #########################################################
         if "GUIparametersDict" in setup_dict:
             self.GUIparametersDict = setup_dict["GUIparametersDict"]
 
-            ##########################################
+            #########################################################
+            #########################################################
             if "USE_GUI_FLAG" in self.GUIparametersDict:
                 self.USE_GUI_FLAG = self.PassThrough0and1values_ExitProgramOtherwise("USE_GUI_FLAG", self.GUIparametersDict["USE_GUI_FLAG"])
             else:
                 self.USE_GUI_FLAG = 0
     
-            print("USE_GUI_FLAG = " + str(self.USE_GUI_FLAG))
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: USE_GUI_FLAG: " + str(self.USE_GUI_FLAG))
+            #########################################################
+            #########################################################
 
-            ##########################################
+            #########################################################
+            #########################################################
             if "root" in self.GUIparametersDict:
                 self.root = self.GUIparametersDict["root"]
-                self.RootIsOwnedExternallyFlag = 1
             else:
-                self.root = None
-                self.RootIsOwnedExternallyFlag = 0
+                print("MyPrint_ReubenPython2and3Class __init__: ERROR, must pass in 'root'")
+                return
+            #########################################################
+            #########################################################
 
-            print("RootIsOwnedExternallyFlag = " + str(self.RootIsOwnedExternallyFlag))
-            ##########################################
-
-            ##########################################
-            if "GUI_RootAfterCallbackInterval_Milliseconds" in self.GUIparametersDict:
-                self.GUI_RootAfterCallbackInterval_Milliseconds = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_RootAfterCallbackInterval_Milliseconds", self.GUIparametersDict["GUI_RootAfterCallbackInterval_Milliseconds"], 0.0, 1000.0))
-            else:
-                self.GUI_RootAfterCallbackInterval_Milliseconds = 30
-
-            print("GUI_RootAfterCallbackInterval_Milliseconds = " + str(self.GUI_RootAfterCallbackInterval_Milliseconds))
-            ##########################################
-
-            ##########################################
+            #########################################################
+            #########################################################
             if "UseBorderAroundThisGuiObjectFlag" in self.GUIparametersDict:
                 self.UseBorderAroundThisGuiObjectFlag = self.PassThrough0and1values_ExitProgramOtherwise("UseBorderAroundThisGuiObjectFlag", self.GUIparametersDict["UseBorderAroundThisGuiObjectFlag"])
             else:
                 self.UseBorderAroundThisGuiObjectFlag = 0
 
-            print("UseBorderAroundThisGuiObjectFlag: " + str(self.UseBorderAroundThisGuiObjectFlag))
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: UseBorderAroundThisGuiObjectFlag: " + str(self.UseBorderAroundThisGuiObjectFlag))
+            #########################################################
+            #########################################################
 
-            ##########################################
+            #########################################################
+            #########################################################
             if "GUI_ROW" in self.GUIparametersDict:
                 self.GUI_ROW = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_ROW", self.GUIparametersDict["GUI_ROW"], 0.0, 1000.0))
             else:
                 self.GUI_ROW = 0
 
-            print("GUI_ROW = " + str(self.GUI_ROW))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_ROW: " + str(self.GUI_ROW))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_COLUMN" in self.GUIparametersDict:
                 self.GUI_COLUMN = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_COLUMN", self.GUIparametersDict["GUI_COLUMN"], 0.0, 1000.0))
             else:
                 self.GUI_COLUMN = 0
 
-            print("GUI_COLUMN = " + str(self.GUI_COLUMN))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_COLUMN: " + str(self.GUI_COLUMN))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_PADX" in self.GUIparametersDict:
                 self.GUI_PADX = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_PADX", self.GUIparametersDict["GUI_PADX"], 0.0, 1000.0))
             else:
                 self.GUI_PADX = 0
 
-            print("GUI_PADX = " + str(self.GUI_PADX))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_PADX: " + str(self.GUI_PADX))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_PADY" in self.GUIparametersDict:
                 self.GUI_PADY = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_PADY", self.GUIparametersDict["GUI_PADY"], 0.0, 1000.0))
             else:
                 self.GUI_PADY = 0
 
-            print("GUI_PADY = " + str(self.GUI_PADY))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_PADY: " + str(self.GUI_PADY))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_ROWSPAN" in self.GUIparametersDict:
                 self.GUI_ROWSPAN = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_ROWSPAN", self.GUIparametersDict["GUI_ROWSPAN"], 0.0, 1000.0))
             else:
-                self.GUI_ROWSPAN = 0
+                self.GUI_ROWSPAN = 1
 
-            print("GUI_ROWSPAN = " + str(self.GUI_ROWSPAN))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_ROWSPAN: " + str(self.GUI_ROWSPAN))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_COLUMNSPAN" in self.GUIparametersDict:
                 self.GUI_COLUMNSPAN = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("GUI_COLUMNSPAN", self.GUIparametersDict["GUI_COLUMNSPAN"], 0.0, 1000.0))
             else:
-                self.GUI_COLUMNSPAN = 0
+                self.GUI_COLUMNSPAN = 1
 
-            print("GUI_COLUMNSPAN = " + str(self.GUI_COLUMNSPAN))
-            ##########################################
-            
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_COLUMNSPAN: " + str(self.GUI_COLUMNSPAN))
+            #########################################################
+            #########################################################
+
+            #########################################################
+            #########################################################
             if "GUI_STICKY" in self.GUIparametersDict:
                 self.GUI_STICKY = str(self.GUIparametersDict["GUI_STICKY"])
             else:
                 self.GUI_STICKY = "w"
 
-            print("GUI_STICKY = " + str(self.GUI_STICKY))
-            ##########################################
+            print("MyPrint_ReubenPython2and3Class __init__: GUI_STICKY: " + str(self.GUI_STICKY))
+            #########################################################
+            #########################################################
             
         else:
             self.GUIparametersDict = dict()
             self.USE_GUI_FLAG = 0
-            print("No GUIparametersDict present, setting USE_GUI_FLAG = " + str(self.USE_GUI_FLAG))
+            print("MyPrint_ReubenPython2and3Class __init__: No GUIparametersDict present, setting USE_GUI_FLAG: " + str(self.USE_GUI_FLAG))
 
-        print("GUIparametersDict = " + str(self.GUIparametersDict))
-        ##########################################
-        ##########################################
+        #print("MyPrint_ReubenPython2and3Class __init__: GUIparametersDict: " + str(self.GUIparametersDict))
+        #########################################################
+        #########################################################
 
-        ##########################################
+        #########################################################
+        #########################################################
         if "NumberOfPrintLines" in setup_dict:
             self.NumberOfPrintLines = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("NumberOfPrintLines", setup_dict["NumberOfPrintLines"], 0.0, 1000.0))
         else:
             self.NumberOfPrintLines = 15
 
-        print("NumberOfPrintLines = " + str(self.NumberOfPrintLines))
-        ##########################################
+        print("MyPrint_ReubenPython2and3Class __init__: NumberOfPrintLines: " + str(self.NumberOfPrintLines))
+        #########################################################
+        #########################################################
 
-        ##########################################
+        #########################################################
+        #########################################################
         if "WidthOfPrintingLabel" in setup_dict:
             self.WidthOfPrintingLabel = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("WidthOfPrintingLabel", setup_dict["WidthOfPrintingLabel"], 10.0, 1920.0))
         else:
             self.WidthOfPrintingLabel = 100
 
-        print("WidthOfPrintingLabel = " + str(self.WidthOfPrintingLabel))
-        ##########################################
+        print("MyPrint_ReubenPython2and3Class __init__: WidthOfPrintingLabel: " + str(self.WidthOfPrintingLabel))
+        #########################################################
+        #########################################################
 
-        ##########################################
+        #########################################################
+        #########################################################
         if "PrintToConsoleFlag" in setup_dict:
             self.PrintToConsoleFlag = self.PassThrough0and1values_ExitProgramOtherwise("PrintToConsoleFlag", setup_dict["PrintToConsoleFlag"])
         else:
             self.PrintToConsoleFlag = 0
 
-        print("PrintToConsoleFlag = " + str(self.PrintToConsoleFlag))
-        ##########################################
+        print("MyPrint_ReubenPython2and3Class __init__: PrintToConsoleFlag: " + str(self.PrintToConsoleFlag))
+        #########################################################
+        #########################################################
 
-        ##########################################
+        #########################################################
+        #########################################################
         if "LogFileNameFullPath" in setup_dict:
             self.LogFileNameFullPath = str(setup_dict["LogFileNameFullPath"])
 
-            if self.LogFileNameFullPath.find("/") == -1 and self.LogFileNameFullPath.find("\\") == -1:
-                print("MyPrint_ReubenPython2and3Class __init__ error: 'LogFileNameFullPath' must be FULL path (should include slashes).")
-                return
+            #if self.LogFileNameFullPath.find("/") == -1 and self.LogFileNameFullPath.find("\\") == -1:
+            #    print("MyPrint_ReubenPython2and3Class __init__: Error,'LogFileNameFullPath' must be FULL path (should include slashes).")
+            #    return
 
         else:
-            self.LogFileNameFullPath = os.getcwd()
+            self.LogFileNameFullPath = "" #os.getcwd()
 
-        print("LogFileNameFullPath = " + str(self.LogFileNameFullPath))
-        ##########################################
+        print("MyPrint_ReubenPython2and3Class __init__: LogFileNameFullPath: " + str(self.LogFileNameFullPath))
+        #########################################################
+        #########################################################
 
+        #########################################################
+        #########################################################
         self.PrintToGui_Label_TextInputHistory_List = [" "]*self.NumberOfPrintLines
         self.PrintToGui_Label_TextInput_Str = ""
 
         self.LinesToBeWrittenToFileQueue = Queue.Queue()
 
         self.GUI_ready_to_be_updated_flag = 0
+        #########################################################
+        #########################################################
 
-        print("#################### MyPrint_ReubenPython2and3Class __init__ ended input-parameter parsing and variable initialization. ####################")
-
-        ##########################################
+        #########################################################
+        #########################################################
         self.MainDataWritingThread_ThreadingObject = threading.Thread(target=self.MainDataWritingThread, args=())
         self.MainDataWritingThread_ThreadingObject.start()
-        ##########################################
+        #########################################################
+        #########################################################
 
-        ##########################################
+        #########################################################
+        #########################################################
         if self.USE_GUI_FLAG == 1:
             self.StartGUI(self.root)
-        ##########################################
+        #########################################################
+        #########################################################
 
+        #########################################################
+        #########################################################
         self.OBJECT_CREATED_SUCCESSFULLY_FLAG = 1
+        #########################################################
+        #########################################################
 
     ##########################################################################################################
     ##########################################################################################################
@@ -438,37 +469,29 @@ class MyPrint_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     ##########################################################################################################
     ##########################################################################################################
-    def StartGUI(self, GuiParent=None):
+    def StartGUI(self, GuiParent):
 
-        GUI_Thread_ThreadingObject = threading.Thread(target=self.GUI_Thread, args=(GuiParent,))
-        GUI_Thread_ThreadingObject.setDaemon(True) #Should mean that the GUI thread is destroyed automatically when the main thread is destroyed.
-        GUI_Thread_ThreadingObject.start()
+        self.GUI_Thread_ThreadingObject = threading.Thread(target=self.GUI_Thread, args=(GuiParent,))
+        self.GUI_Thread_ThreadingObject.setDaemon(True) #Should mean that the GUI thread is destroyed automatically when the main thread is destroyed.
+        self.GUI_Thread_ThreadingObject.start()
     ##########################################################################################################
     ##########################################################################################################
 
     ##########################################################################################################
     ##########################################################################################################
-    def GUI_Thread(self, parent=None):
+    def GUI_Thread(self, parent):
 
         print("Starting the GUI_Thread for MyPrint_ReubenPython2and3Class object.")
 
-        ########################
-        if parent == None:  #This class object owns root and must handle it properly
-            self.root = Tk()
-            self.parent = self.root
+        #########################################################
+        #########################################################
+        self.root = parent
+        self.parent = parent
+        #########################################################
+        #########################################################
 
-            ################################################### SET THE DEFAULT FONT FOR ALL WIDGETS CREATED AFTTER/BELOW THIS CALL
-            default_font = tkFont.nametofont("TkDefaultFont")
-            default_font.configure(size=8)
-            self.root.option_add("*Font", default_font)
-            ###################################################
-
-        else:
-            self.root = parent
-            self.parent = parent
-        ########################
-
-        ########################
+        #########################################################
+        #########################################################
         self.myFrame = Frame(self.root)
 
         if self.UseBorderAroundThisGuiObjectFlag == 1:
@@ -482,29 +505,21 @@ class MyPrint_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                           rowspan = self.GUI_ROWSPAN,
                           columnspan = self.GUI_COLUMNSPAN,
                           sticky = self.GUI_STICKY)
-        ########################
+        #########################################################
+        #########################################################
 
-        ########################
+        #########################################################
+        #########################################################
         self.PrintToGui_Label = Label(self.myFrame, text="PrintToGui_Label", width=self.WidthOfPrintingLabel)
         self.PrintToGui_Label.grid(row=0, column=0, padx=1, pady=1, columnspan=1, rowspan=1)
-        ########################
+        #########################################################
+        #########################################################
 
-        ########################
-        if self.RootIsOwnedExternallyFlag == 0: #This class object owns root and must handle it properly
-            self.root.protocol("WM_DELETE_WINDOW", self.ExitProgram_Callback)
-
-            self.root.after(self.GUI_RootAfterCallbackInterval_Milliseconds, self.GUI_update_clock)
-            self.GUI_ready_to_be_updated_flag = 1
-            self.root.mainloop()
-        else:
-            self.GUI_ready_to_be_updated_flag = 1
-        ########################
-
-        ########################
-        if self.RootIsOwnedExternallyFlag == 0: #This class object owns root and must handle it properly
-            self.root.quit()  # Stop the GUI thread, MUST BE CALLED FROM GUI_Thread
-            self.root.destroy()  # Close down the GUI thread, MUST BE CALLED FROM GUI_Thread
-        ########################
+        #########################################################
+        #########################################################
+        self.GUI_ready_to_be_updated_flag = 1
+        #########################################################
+        #########################################################
 
     ##########################################################################################################
     ##########################################################################################################
@@ -526,13 +541,6 @@ class MyPrint_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                 self.PrintToGui_Label.config(text = self.PrintToGui_Label_TextInput_Str)
                 #######################################################
 
-            #######################################################
-            #######################################################
-
-            #######################################################
-            #######################################################
-            if self.RootIsOwnedExternallyFlag == 0:  #This class object owns root and must handle it properly
-                self.root.after(self.GUI_RootAfterCallbackInterval_Milliseconds, self.GUI_update_clock)
             #######################################################
             #######################################################
 
