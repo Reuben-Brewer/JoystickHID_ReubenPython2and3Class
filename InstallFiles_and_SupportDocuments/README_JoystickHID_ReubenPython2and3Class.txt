@@ -12,7 +12,7 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision D, 07/20/2022
+Software Revision E, 08/29/2022
 
 Verified working on: 
 Python 2.7, 3.8.
@@ -25,7 +25,7 @@ Raspberry Pi Buster
 ########################### Python module installation instructions, all OS's
 
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'pygame']
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['future.builtins', 'MyPrint_ReubenPython2and3Class']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['MyPrint_ReubenPython2and3Class']
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: ['future.builtins']
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
 

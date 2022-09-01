@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision D, 07/20/2022
+Software Revision E, 08/29/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -25,6 +25,7 @@ import time
 import datetime
 import math
 import collections
+from copy import * #for deepcopy
 import inspect #To enable 'TellWhichFileWereIn'
 import threading
 import traceback
@@ -76,7 +77,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         #########################################################
         self.EXIT_PROGRAM_FLAG = 0
         self.OBJECT_CREATED_SUCCESSFULLY_FLAG = -1
-        self.Joystick_Connected_Flag = 0
+        self.Joystick_FoundAndOpenedFlag = 0
         self.EnableInternal_MyPrint_Flag = 0
         self.MainThread_still_running_flag = 0
 
@@ -242,6 +243,17 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
+        if "Joystick_PrintInfoForAllDetectedJoysticksFlag" in setup_dict:
+            self.Joystick_PrintInfoForAllDetectedJoysticksFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_PrintInfoForAllDetectedJoysticksFlag", setup_dict["Joystick_PrintInfoForAllDetectedJoysticksFlag"])
+        else:
+            self.Joystick_PrintInfoForAllDetectedJoysticksFlag = 0
+
+        print("JoystickHID_ReubenPython2and3Class __init__: Joystick_PrintInfoForAllDetectedJoysticksFlag: " + str(self.Joystick_PrintInfoForAllDetectedJoysticksFlag))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
         if "Joystick_NameDesired" in setup_dict:
             self.Joystick_NameDesired = str(setup_dict["Joystick_NameDesired"])
         else:
@@ -254,9 +266,9 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         #########################################################
         #########################################################
         if "Joystick_IntegerIDdesired" in setup_dict:
-            self.Joystick_IntegerIDdesired = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_IntegerIDdesired", setup_dict["Joystick_IntegerIDdesired"], 0.0, 32.0))
+            self.Joystick_IntegerIDdesired = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_IntegerIDdesired", setup_dict["Joystick_IntegerIDdesired"], -1.0, 32.0))
         else:
-            self.Joystick_IntegerIDdesired = 0
+            self.Joystick_IntegerIDdesired = -1
 
         print("JoystickHID_ReubenPython2and3Class __init__: Joystick_IntegerIDdesired: " + str(self.Joystick_IntegerIDdesired))
         #########################################################
@@ -309,48 +321,39 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         pygame.init()
         pygame.joystick.init()
 
-        self.Joystick_NumberOfJoysticksDetected = pygame.joystick.get_count()
-        self.MyPrint_WithoutLogFile("JoystickHID_ReubenPython2and3Class  __init__: Number of joysticks found: " + str(self.Joystick_NumberOfJoysticksDetected))
+        self.Joystick_DetectedParameters_Dict = self.AnalyzeAndInitializeJoystick(self.Joystick_NameDesired, self.Joystick_IntegerIDdesired, self.Joystick_PrintInfoForAllDetectedJoysticksFlag)
+        print("self.Joystick_DetectedParameters_Dict: " + str(self.Joystick_DetectedParameters_Dict))
+        self.Joystick_FoundAndOpenedFlag = self.Joystick_DetectedParameters_Dict["Joystick_FoundAndOpenedFlag"]
+        print("self.Joystick_FoundAndOpenedFlag: " + str(self.Joystick_FoundAndOpenedFlag ))
 
-        if self.Joystick_NumberOfJoysticksDetected > 0:
+        if self.Joystick_FoundAndOpenedFlag == 1:
 
-            for JoystickNumber in range(0, self.Joystick_NumberOfJoysticksDetected):
-                Joystick_DetectedParameters_Dict = self.AnalyzeAndInitializeJoystick(JoystickNumber)
+            self.MyPrint_WithoutLogFile("JoystickHID_ReubenPython2and3Class __init__: Found and opened the correct joystick.")
 
-                if (Joystick_DetectedParameters_Dict["Joystick_NameDetected"].strip().find(self.Joystick_NameDesired)) != -1 and (Joystick_DetectedParameters_Dict["Joystick_IntegerIDdetected"] == self.Joystick_IntegerIDdesired):
-                    #########################################################
-                    self.MyPrint_WithoutLogFile("--------------------JoystickHID_ReubenPython2and3Class  __init__: Detected the correct joystick (" + str(self.Joystick_NameDesired) + ").--------------------")
+            self.Joystick_NameDetected = self.Joystick_DetectedParameters_Dict["Joystick_NameDetected"]
+            self.Joystick_IntegerIDdetected = self.Joystick_DetectedParameters_Dict["Joystick_IntegerIDdetected"]
+            self.Joystick_NumberOfAxesDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfAxesDetected"]
+            self.Joystick_NumberOfButtonsDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfButtonsDetected"]
+            self.Joystick_NumberOfHatsDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfHatsDetected"]
+            self.Joystick_NumberOfBallsDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfBallsDetected"]
+            self.Joystick_Object = self.Joystick_DetectedParameters_Dict["Joystick_Object"]
 
-                    self.Joystick_NameDetected = Joystick_DetectedParameters_Dict["Joystick_NameDetected"]
-                    self.Joystick_IntegerIDdetected = Joystick_DetectedParameters_Dict["Joystick_IntegerIDdetected"]
-                    self.Joystick_NumberOfAxesDetected = Joystick_DetectedParameters_Dict["Joystick_NumberOfAxesDetected"]
-                    self.Joystick_NumberOfButtonsDetected = Joystick_DetectedParameters_Dict["Joystick_NumberOfButtonsDetected"]
-                    self.Joystick_NumberOfHatsDetected = Joystick_DetectedParameters_Dict["Joystick_NumberOfHatsDetected"]
-                    self.Joystick_NumberOfBallsDetected = Joystick_DetectedParameters_Dict["Joystick_NumberOfBallsDetected"]
-                    self.Joystick_Object = Joystick_DetectedParameters_Dict["Joystick_Object"]
+            self.Joystick_Axis_Value_List = [-11111.0]*self.Joystick_NumberOfAxesDetected
+            self.Joystick_Axis_Value_List_Last = [-11111.0] * self.Joystick_NumberOfAxesDetected
+            self.Joystick_Button_Value_List = [-11111]*self.Joystick_NumberOfButtonsDetected
+            self.Joystick_Button_Value_List_Last = [-11111] * self.Joystick_NumberOfButtonsDetected
+            self.Joystick_Button_LatchingRisingEdgeEvents_List = [0] * self.Joystick_NumberOfButtonsDetected
+            self.Joystick_Hat_Value_List = [[-11111, -11111]]*self.Joystick_NumberOfHatsDetected
+            self.Joystick_Hat_Value_List_Last = [[-11111, -11111]] * self.Joystick_NumberOfHatsDetected
+            self.Joystick_Hat_LatchingRisingEdgeEvents_List = [[0, 0]] * self.Joystick_NumberOfHatsDetected #Two axes per hat
+            self.Joystick_Ball_Value_List = [-11111.0]*self.Joystick_NumberOfBallsDetected
+            self.Joystick_Ball_Value_List_Last = [-11111.0] * self.Joystick_NumberOfBallsDetected
 
-                    self.Joystick_Axis_Value_List = [-11111.0]*self.Joystick_NumberOfAxesDetected
-                    self.Joystick_Axis_Value_List_Last = [-11111.0] * self.Joystick_NumberOfAxesDetected
-                    self.Joystick_Button_Value_List = [-11111]*self.Joystick_NumberOfButtonsDetected
-                    self.Joystick_Button_Value_List_Last = [-11111] * self.Joystick_NumberOfButtonsDetected
-                    self.Joystick_Button_LatchingRisingEdgeEvents_List = [0] * self.Joystick_NumberOfButtonsDetected
-                    self.Joystick_Hat_Value_List = [[-11111, -11111]]*self.Joystick_NumberOfHatsDetected
-                    self.Joystick_Hat_Value_List_Last = [[-11111, -11111]] * self.Joystick_NumberOfHatsDetected
-                    self.Joystick_Hat_LatchingRisingEdgeEvents_List = [[0, 0]] * self.Joystick_NumberOfHatsDetected #Two axes per hat
-                    self.Joystick_Ball_Value_List = [-11111.0]*self.Joystick_NumberOfBallsDetected
-                    self.Joystick_Ball_Value_List_Last = [-11111.0] * self.Joystick_NumberOfBallsDetected
+            self.MostRecentDataDict = dict()
 
-                    self.MostRecentDataDict = dict()
-
-                    self.Joystick_Connected_Flag = 1
-                    print("JoystickHID_ReubenPython2and3Class  __init__: Correctly detected joystick " + str(self.Joystick_NameDesired) + ", ID number " + str(self.Joystick_IntegerIDdesired) +".")
-
-                    break
-                    #########################################################
-
-                else:
-                    print("JoystickHID_ReubenPython2and3Class  __init__: Detected joystick name " + Joystick_DetectedParameters_Dict["Joystick_NameDetected"] + " but that is not the desired joystick (" + str(self.Joystick_NameDesired) + ", ID number " + str(self.Joystick_IntegerIDdesired) +").")
-
+        else:
+            self.MyPrint_WithoutLogFile("JoystickHID_ReubenPython2and3Class __init__: Error, could not find and open the correct joystick.")
+            return
         #########################################################
         #########################################################
 
@@ -392,7 +395,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if self.Joystick_Connected_Flag == 1:
+        if self.Joystick_FoundAndOpenedFlag == 1:
 
             #########################################################
             #########################################################
@@ -421,8 +424,6 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
             #########################################################
 
         else:
-            print("JoystickHID_ReubenPython2and3Class  __init__ Error: Desired joystick '" + str(self.Joystick_NameDesired) + \
-            "', IntegerID " + str(self.Joystick_IntegerIDdesired) + ", was not found.")
             return
         #########################################################
         #########################################################
@@ -432,38 +433,113 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     #######################################################################################################################
     #######################################################################################################################
-    def AnalyzeAndInitializeJoystick(self, Joystick_IntegerIDdetected_to_initialize_and_analyze, print_silence_flag = 0): #Joystick_IntegerIDdetected_to_initialize_and_analyze = numerical assignment of joystick id (e.g. 0, 1, 2)
+    def AnalyzeAndInitializeJoystick(self, NameDesired = "", IntegerIDdesired = -1, PrintInfoForAllDetectedJoysticksFlag = 1):
 
-        Joystick_Object = pygame.joystick.Joystick(Joystick_IntegerIDdetected_to_initialize_and_analyze)
-        Joystick_Object.init()
+        JoystickDictToReturn = dict([("Joystick_FoundAndOpenedFlag", 0)])
 
-        Joystick_NameDetected = Joystick_Object.get_name()
-        self.MyPrint_WithoutLogFile("Joystick name: " + str(Joystick_NameDetected))
+        #########################################################
+        #########################################################
+        #########################################################
+        try:
+            self.Joystick_NumberOfJoysticksDetected = pygame.joystick.get_count()
 
-        Joystick_IntegerIDdetected = Joystick_Object.get_id()
-        self.MyPrint_WithoutLogFile("Joystick id: " + str(Joystick_IntegerIDdetected))
+            #########################################################
+            #########################################################
+            if self.Joystick_NumberOfJoysticksDetected <= 0:
+                self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Error: 0 joysticks were detected.")
+                return JoystickDictToReturn
+            #########################################################
+            #########################################################
 
-        Joystick_NumberOfAxesDetected = Joystick_Object.get_numaxes()
-        self.MyPrint_WithoutLogFile("Number of axes: " + str(Joystick_NumberOfAxesDetected))
+            #########################################################
+            #########################################################
+            if self.Joystick_NumberOfJoysticksDetected < IntegerIDdesired:
+                self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Error: IntegerIDdesired (" + str(IntegerIDdesired)+ ") cannot be smaller than the number of joysticks detected (" + str(self.Joystick_NumberOfJoysticksDetected) + ")")
+                return JoystickDictToReturn
+            #########################################################
+            #########################################################
 
-        Joystick_NumberOfButtonsDetected = Joystick_Object.get_numbuttons()
-        self.MyPrint_WithoutLogFile("Number of buttons: " + str(Joystick_NumberOfButtonsDetected))
+            #########################################################
+            #########################################################
+            for IntegerID_TempIndex in range(0, self.Joystick_NumberOfJoysticksDetected):
 
-        Joystick_NumberOfHatsDetected = Joystick_Object.get_numhats()
-        self.MyPrint_WithoutLogFile("Number of hats: " + str(Joystick_NumberOfHatsDetected))
+                #########################################################
+                Joystick_Object = pygame.joystick.Joystick(IntegerID_TempIndex)
+                Joystick_Object.init()
 
-        Joystick_NumberOfBallsDetected = Joystick_Object.get_numballs()
-        self.MyPrint_WithoutLogFile("Number of balls: " + str(Joystick_NumberOfBallsDetected))
+                Joystick_NameDetected = Joystick_Object.get_name()
+                Joystick_IntegerIDdetected = Joystick_Object.get_id()
+                Joystick_NumberOfAxesDetected = Joystick_Object.get_numaxes()
+                Joystick_NumberOfButtonsDetected = Joystick_Object.get_numbuttons()
+                Joystick_NumberOfHatsDetected = Joystick_Object.get_numhats()
+                Joystick_NumberOfBallsDetected = Joystick_Object.get_numballs()
 
-        JoystickDictToReturn = dict([("Joystick_Object", Joystick_Object),
-                                     ("Joystick_NameDetected", Joystick_NameDetected),
-                                     ("Joystick_IntegerIDdetected", Joystick_IntegerIDdetected),
-                                     ("Joystick_NumberOfAxesDetected", Joystick_NumberOfAxesDetected),
-                                     ("Joystick_NumberOfButtonsDetected", Joystick_NumberOfButtonsDetected),
-                                     ("Joystick_NumberOfHatsDetected", Joystick_NumberOfHatsDetected),
-                                     ("Joystick_NumberOfBallsDetected", Joystick_NumberOfBallsDetected)])
+                ###########################
+                if PrintInfoForAllDetectedJoysticksFlag == 1:
+                    self.MyPrint_WithoutLogFile("********************************************")
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NameDetected: " + str(Joystick_NameDetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_IntegerIDdetected: " + str(Joystick_IntegerIDdetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfAxesDetected: " + str(Joystick_NumberOfAxesDetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfButtonsDetected: " + str(Joystick_NumberOfButtonsDetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfHatsDetected: " + str(Joystick_NumberOfHatsDetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfBallsDetected: " + str(Joystick_NumberOfBallsDetected))
+                    self.MyPrint_WithoutLogFile("********************************************")
+                ###########################
+
+                NameMatchFlag = -1
+                IntegerIDmatchFlag = -1
+
+                ###########################
+                if NameDesired != "": #Meaning that we really care what the name is
+                    if Joystick_NameDetected.strip().find(NameDesired) != -1:
+                        NameMatchFlag = 1
+                    else:
+                        NameMatchFlag = 0
+                else:
+                    NameMatchFlag = 1
+                ###########################
+
+                ###########################
+                if IntegerIDdesired != -1: #Meaning that we really care what the IntegerID is
+                    if IntegerIDdesired == Joystick_IntegerIDdetected:
+                        IntegerIDmatchFlag = 1
+                    else:
+                        IntegerIDmatchFlag = 0
+                else:
+                    IntegerIDmatchFlag = 1
+                ###########################
+
+                ###########################
+                if NameMatchFlag == 1 and IntegerIDmatchFlag == 1:
+
+                    JoystickDictToReturn = dict([("Joystick_FoundAndOpenedFlag", 1),
+                                                ("Joystick_Object", Joystick_Object),
+                                                ("Joystick_NameDetected", Joystick_NameDetected),
+                                                ("Joystick_IntegerIDdetected", Joystick_IntegerIDdetected),
+                                                ("Joystick_NumberOfAxesDetected", Joystick_NumberOfAxesDetected),
+                                                ("Joystick_NumberOfButtonsDetected", Joystick_NumberOfButtonsDetected),
+                                                ("Joystick_NumberOfHatsDetected", Joystick_NumberOfHatsDetected),
+                                                ("Joystick_NumberOfBallsDetected", Joystick_NumberOfBallsDetected)])
+
+                    return JoystickDictToReturn
+                ###########################
+
+                #########################################################
+
+            #########################################################
+            #########################################################
+
+        except:
+            exceptions = sys.exc_info()[0]
+            print("AnalyzeAndInitializeJoystick, Exceptions: %s" % exceptions)
+            return JoystickDictToReturn
+
+        #########################################################
+        #########################################################
+        #########################################################
 
         return JoystickDictToReturn
+
     #######################################################################################################################
     #######################################################################################################################
     
@@ -593,7 +669,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         if self.EXIT_PROGRAM_FLAG == 0:
 
-            return self.MostRecentDataDict
+            return deepcopy(self.MostRecentDataDict) #deepcopy IS required (beyond .copy()) as MostRecentDataDict contains lists.
 
         else:
             return dict() #So that we're not returning variables during the close-down process.
@@ -676,7 +752,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         ##########################################################################################################
         while self.EXIT_PROGRAM_FLAG == 0:
 
-            if self.Joystick_Connected_Flag == 1:
+            if self.Joystick_FoundAndOpenedFlag == 1:
                 try:
 
                     ##########################################################################################################
@@ -951,47 +1027,6 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     ##########################################################################################################
     ##########################################################################################################
-    def ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(self, input, number_of_leading_numbers=4, number_of_decimal_places=3):
-        IsListFlag = self.IsInputList(input)
-
-        if IsListFlag == 0:
-            float_number_list = [input]
-        else:
-            float_number_list = list(input)
-
-        float_number_list_as_strings = []
-        for element in float_number_list:
-            try:
-                element = float(element)
-                prefix_string = "{:." + str(number_of_decimal_places) + "f}"
-                element_as_string = prefix_string.format(element)
-                float_number_list_as_strings.append(element_as_string)
-            except:
-                self.MyPrint_WithoutLogFile(self.TellWhichFileWereIn() + ": ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput ERROR: " + str(element) + " cannot be turned into a float")
-                return -1
-
-        StringToReturn = ""
-        if IsListFlag == 0:
-            StringToReturn = float_number_list_as_strings[0].zfill(number_of_leading_numbers + number_of_decimal_places + 1 + 1)  # +1 for sign, +1 for decimal place
-        else:
-            StringToReturn = "["
-            for index, StringElement in enumerate(float_number_list_as_strings):
-                if float_number_list[index] >= 0:
-                    StringElement = "+" + StringElement  # So that our strings always have either + or - signs to maintain the same string length
-
-                StringElement = StringElement.zfill(number_of_leading_numbers + number_of_decimal_places + 1 + 1)  # +1 for sign, +1 for decimal place
-
-                if index != len(float_number_list_as_strings) - 1:
-                    StringToReturn = StringToReturn + StringElement + ", "
-                else:
-                    StringToReturn = StringToReturn + StringElement + "]"
-
-        return StringToReturn
-    ##########################################################################################################
-    ##########################################################################################################
-
-    ##########################################################################################################
-    ##########################################################################################################
     def MyPrint_WithoutLogFile(self, input_string):
 
         input_string = str(input_string)
@@ -1021,3 +1056,166 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     ##########################################################################################################
     ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    def ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(self, input, number_of_leading_numbers = 4, number_of_decimal_places = 3):
+
+        number_of_decimal_places = max(1, number_of_decimal_places) #Make sure we're above 1
+
+        ListOfStringsToJoin = []
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        if isinstance(input, str) == 1:
+            ListOfStringsToJoin.append(input)
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        elif isinstance(input, int) == 1 or isinstance(input, float) == 1:
+            element = float(input)
+            prefix_string = "{:." + str(number_of_decimal_places) + "f}"
+            element_as_string = prefix_string.format(element)
+
+            ##########################################################################################################
+            ##########################################################################################################
+            if element >= 0:
+                element_as_string = element_as_string.zfill(number_of_leading_numbers + number_of_decimal_places + 1 + 1)  # +1 for sign, +1 for decimal place
+                element_as_string = "+" + element_as_string  # So that our strings always have either + or - signs to maintain the same string length
+            else:
+                element_as_string = element_as_string.zfill(number_of_leading_numbers + number_of_decimal_places + 1 + 1 + 1)  # +1 for sign, +1 for decimal place
+            ##########################################################################################################
+            ##########################################################################################################
+
+            ListOfStringsToJoin.append(element_as_string)
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        elif isinstance(input, list) == 1:
+
+            if len(input) > 0:
+                for element in input: #RECURSION
+                    ListOfStringsToJoin.append(self.ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(element, number_of_leading_numbers, number_of_decimal_places))
+
+            else: #Situation when we get a list() or []
+                ListOfStringsToJoin.append(str(input))
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        elif isinstance(input, tuple) == 1:
+
+            if len(input) > 0:
+                for element in input: #RECURSION
+                    ListOfStringsToJoin.append("TUPLE" + self.ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(element, number_of_leading_numbers, number_of_decimal_places))
+
+            else: #Situation when we get a list() or []
+                ListOfStringsToJoin.append(str(input))
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        elif isinstance(input, dict) == 1:
+
+            if len(input) > 0:
+                for Key in input: #RECURSION
+                    ListOfStringsToJoin.append(str(Key) + ": " + self.ConvertFloatToStringWithNumberOfLeadingNumbersAndDecimalPlaces_NumberOrListInput(input[Key], number_of_leading_numbers, number_of_decimal_places))
+
+            else: #Situation when we get a dict()
+                ListOfStringsToJoin.append(str(input))
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        else:
+            ListOfStringsToJoin.append(str(input))
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+        if len(ListOfStringsToJoin) > 1:
+
+            ##########################################################################################################
+            ##########################################################################################################
+
+            ##########################################################################################################
+            StringToReturn = ""
+            for Index, StringToProcess in enumerate(ListOfStringsToJoin):
+
+                ################################################
+                if Index == 0: #The first element
+                    if StringToProcess.find(":") != -1 and StringToProcess[0] != "{": #meaning that we're processing a dict()
+                        StringToReturn = "{"
+                    elif StringToProcess.find("TUPLE") != -1 and StringToProcess[0] != "(":  # meaning that we're processing a tuple
+                        StringToReturn = "("
+                    else:
+                        StringToReturn = "["
+
+                    StringToReturn = StringToReturn + StringToProcess.replace("TUPLE","") + ", "
+                ################################################
+
+                ################################################
+                elif Index < len(ListOfStringsToJoin) - 1: #The middle elements
+                    StringToReturn = StringToReturn + StringToProcess + ", "
+                ################################################
+
+                ################################################
+                else: #The last element
+                    StringToReturn = StringToReturn + StringToProcess
+
+                    if StringToProcess.find(":") != -1 and StringToProcess[-1] != "}":  # meaning that we're processing a dict()
+                        StringToReturn = StringToReturn + "}"
+                    elif StringToProcess.find("TUPLE") != -1 and StringToProcess[-1] != ")":  # meaning that we're processing a tuple
+                        StringToReturn = StringToReturn + ")"
+                    else:
+                        StringToReturn = StringToReturn + "]"
+
+                ################################################
+
+            ##########################################################################################################
+
+            ##########################################################################################################
+            ##########################################################################################################
+
+        elif len(ListOfStringsToJoin) == 1:
+            StringToReturn = ListOfStringsToJoin[0]
+
+        else:
+            StringToReturn = ListOfStringsToJoin
+
+        return StringToReturn
+        ##########################################################################################################
+        ##########################################################################################################
+        ##########################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+    ##########################################################################################################
+

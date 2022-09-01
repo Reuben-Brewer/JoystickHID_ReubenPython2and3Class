@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision D, 07/16/2022
+Software Revision E, 08/29/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -228,6 +228,12 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
         self.JoystickXYboxCanvas_PointerCircle = self.CreateAndDrawCircleOnCanvas_CanvasCoord(self.JoystickXYboxCanvas, 0, 0, self.JoystickXYboxCanvas_PointerCircle_Radius, "red")
         ###
 
+        #################################################
+        #################################################
+
+        #################################################
+        #################################################
+        time.sleep(0.1)
         #################################################
         #################################################
 

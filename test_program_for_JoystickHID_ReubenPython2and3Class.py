@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision D, 07/20/2022
+Software Revision E, 08/29/2022
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -37,13 +37,6 @@ else:
     from tkinter import * #Python 3
     import tkinter.font as tkFont #Python 3
     from tkinter import ttk
-#########################################################
-
-#########################################################
-if sys.version_info[0] < 3:
-    from builtins import raw_input as input
-else:
-    from future.builtins import input as input #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
 #########################################################
 
 #########################################################
@@ -389,12 +382,13 @@ if __name__ == '__main__':
     #################################################
 
     ########################
-    Joystick_NameDesired = "VKBsim Gladiator"
-    Joystick_IntegerIDdesired = 0
+    Joystick_NameDesired = "VKBsim Gladiator" #"" means that we don't care about the name.
+    Joystick_IntegerIDdesired = -1 #-1 means that we don't care about the IntegerID.
     Joystick_ShowJustDotMovingFlag = 0
     Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
     Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
     Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay = 13
+    Joystick_PrintInfoForAllDetectedJoysticksFlag = 1
     ########################
 
     global JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict
@@ -419,7 +413,8 @@ if __name__ == '__main__':
                                                                 ("Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay", Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay),
                                                                 ("Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay", Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay),
                                                                 ("Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay", Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay),
-                                                                ("MainThread_TimeToSleepEachLoop", 0.010)])
+                                                                ("MainThread_TimeToSleepEachLoop", 0.010),
+                                                                ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag)])
 
     if USE_JOYSTICK_FLAG == 1:
         try:
@@ -468,8 +463,7 @@ if __name__ == '__main__':
     #################################################
     if USE_JOYSTICK_FLAG == 1 and JOYSTICK_OPEN_FLAG != 1:
         print("Failed to open JoystickHID_ReubenPython2and3Class.")
-        input("Press any key (and enter) to exit.")
-        sys.exit()
+        ExitProgram_Callback()
     #################################################
     #################################################
 
@@ -477,8 +471,7 @@ if __name__ == '__main__':
     #################################################
     if USE_MYPRINT_FLAG == 1 and MYPRINT_OPEN_FLAG != 1:
         print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
-        input("Press any key (and enter) to exit.")
-        sys.exit()
+        ExitProgram_Callback()
     #################################################
     #################################################
 
@@ -511,6 +504,7 @@ if __name__ == '__main__':
                 JOYSTICK_MostRecentDict_DataStreamingFrequency = JOYSTICK_MostRecentDict["DataStreamingFrequency"]
                 JOYSTICK_MostRecentDict_Time = JOYSTICK_MostRecentDict["Time"]
 
+                #print("JOYSTICK_MostRecentDict: " + str(JOYSTICK_MostRecentDict))
                 #print("JOYSTICK_MostRecentDict_Joystick_Axis_Value_List: " + str(JOYSTICK_MostRecentDict_Joystick_Axis_Value_List))
         ###################################################
         ###################################################
