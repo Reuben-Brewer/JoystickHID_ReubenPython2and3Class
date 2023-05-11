@@ -12,7 +12,7 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision F, 09/21/2022
+Software Revision G, 05/10/2023
 
 Verified working on: 
 
@@ -27,7 +27,6 @@ Raspberry Pi Buster
 (no Mac testing yet)
 
 *Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick (such as the VKBsim Gladiator).
-
 Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
 
 ###########################
@@ -40,7 +39,7 @@ JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['MyPr
 
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: ['future.builtins']
 
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All:['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
 
 #https://github.com/Reuben-Brewer/Joystick2DdotDisplay_ReubenPython2and3Class
 
