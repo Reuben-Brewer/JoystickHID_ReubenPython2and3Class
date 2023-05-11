@@ -6,13 +6,13 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision F, 09/21/2022
+Software Revision G, 05/10/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04*, and Raspberry Pi Buster (no Mac testing yet).
 
-*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick
+*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of Joystick
 (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the
-actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
+actual values are that are streaming from the Joystick without going through JoystickHID_ReubenPython2and3Class.*
 '''
 
 __author__ = 'reuben.brewer'
@@ -64,9 +64,9 @@ def getPreciseSecondsTimeStampString():
 ##########################################################################################################
 def TestButtonResponse():
     global MyPrint_ReubenPython2and3ClassObject
-    global USE_MYPRINT_FLAG
+    global USE_MyPrint_FLAG
 
-    if USE_MYPRINT_FLAG == 1:
+    if USE_MyPrint_FLAG == 1:
         MyPrint_ReubenPython2and3ClassObject.my_print("Test Button was Pressed!")
     else:
         print("Test Button was Pressed!")
@@ -82,12 +82,12 @@ def GUI_update_clock():
     global USE_GUI_FLAG
 
     global JoystickHID_ReubenPython2and3ClassObject
-    global JOYSTICK_OPEN_FLAG
-    global SHOW_IN_GUI_JOYSTICK_FLAG
+    global Joystick_OPEN_FLAG
+    global SHOW_IN_GUI_Joystick_FLAG
 
     global MyPrint_ReubenPython2and3ClassObject
-    global MYPRINT_OPEN_FLAG
-    global SHOW_IN_GUI_MYPRINT_FLAG
+    global MyPrint_OPEN_FLAG
+    global SHOW_IN_GUI_MyPrint_FLAG
 
     if USE_GUI_FLAG == 1:
         if EXIT_PROGRAM_FLAG == 0:
@@ -95,12 +95,12 @@ def GUI_update_clock():
         #########################################################
 
             #########################################################
-            if JOYSTICK_OPEN_FLAG == 1 and SHOW_IN_GUI_JOYSTICK_FLAG == 1:
+            if Joystick_OPEN_FLAG == 1 and SHOW_IN_GUI_Joystick_FLAG == 1:
                 JoystickHID_ReubenPython2and3ClassObject.GUI_update_clock()
             #########################################################
 
             #########################################################
-            if MYPRINT_OPEN_FLAG == 1 and SHOW_IN_GUI_MYPRINT_FLAG == 1:
+            if MyPrint_OPEN_FLAG == 1 and SHOW_IN_GUI_MyPrint_FLAG == 1:
                 MyPrint_ReubenPython2and3ClassObject.GUI_update_clock()
             #########################################################
 
@@ -143,15 +143,15 @@ def GUI_Thread():
     #################################################
     global TabControlObject
     global Tab_MainControls
-    global Tab_JOYSTICK
+    global Tab_Joystick
     global Tab_MyPrint
 
     if USE_TABS_IN_GUI_FLAG == 1:
         #################################################
         TabControlObject = ttk.Notebook(root)
 
-        Tab_JOYSTICK = ttk.Frame(TabControlObject)
-        TabControlObject.add(Tab_JOYSTICK, text='   JOYSTICK   ')
+        Tab_Joystick = ttk.Frame(TabControlObject)
+        TabControlObject.add(Tab_Joystick, text='   Joystick   ')
 
         Tab_MainControls = ttk.Frame(TabControlObject)
         TabControlObject.add(Tab_MainControls, text='   Main Controls   ')
@@ -169,7 +169,7 @@ def GUI_Thread():
     else:
         #################################################
         Tab_MainControls = root
-        Tab_JOYSTICK = root
+        Tab_Joystick = root
         Tab_MyPrint = root
         #################################################
 
@@ -233,53 +233,53 @@ if __name__ == '__main__':
     global USE_TABS_IN_GUI_FLAG
     USE_TABS_IN_GUI_FLAG = 1
 
-    global USE_JOYSTICK_FLAG
-    USE_JOYSTICK_FLAG = 1
+    global USE_Joystick_FLAG
+    USE_Joystick_FLAG = 1
 
-    global USE_MYPRINT_FLAG
-    USE_MYPRINT_FLAG = 1
-    #################################################
-    #################################################
-
-    #################################################
-    #################################################
-    global SHOW_IN_GUI_JOYSTICK_FLAG
-    SHOW_IN_GUI_JOYSTICK_FLAG = 1
-
-    global SHOW_IN_GUI_MYPRINT_FLAG
-    SHOW_IN_GUI_MYPRINT_FLAG = 1
+    global USE_MyPrint_FLAG
+    USE_MyPrint_FLAG = 1
     #################################################
     #################################################
 
     #################################################
     #################################################
-    global GUI_ROW_JOYSTICK
-    global GUI_COLUMN_JOYSTICK
-    global GUI_PADX_JOYSTICK
-    global GUI_PADY_JOYSTICK
-    global GUI_ROWSPAN_JOYSTICK
-    global GUI_COLUMNSPAN_JOYSTICK
-    GUI_ROW_JOYSTICK = 1
+    global SHOW_IN_GUI_Joystick_FLAG
+    SHOW_IN_GUI_Joystick_FLAG = 1
 
-    GUI_COLUMN_JOYSTICK = 0
-    GUI_PADX_JOYSTICK = 1
-    GUI_PADY_JOYSTICK = 1
-    GUI_ROWSPAN_JOYSTICK = 1
-    GUI_COLUMNSPAN_JOYSTICK = 1
+    global SHOW_IN_GUI_MyPrint_FLAG
+    SHOW_IN_GUI_MyPrint_FLAG = 1
+    #################################################
+    #################################################
 
-    global GUI_ROW_MYPRINT
-    global GUI_COLUMN_MYPRINT
-    global GUI_PADX_MYPRINT
-    global GUI_PADY_MYPRINT
-    global GUI_ROWSPAN_MYPRINT
-    global GUI_COLUMNSPAN_MYPRINT
-    GUI_ROW_MYPRINT = 2
+    #################################################
+    #################################################
+    global GUI_ROW_Joystick
+    global GUI_COLUMN_Joystick
+    global GUI_PADX_Joystick
+    global GUI_PADY_Joystick
+    global GUI_ROWSPAN_Joystick
+    global GUI_COLUMNSPAN_Joystick
+    GUI_ROW_Joystick = 1
 
-    GUI_COLUMN_MYPRINT = 0
-    GUI_PADX_MYPRINT = 1
-    GUI_PADY_MYPRINT = 1
-    GUI_ROWSPAN_MYPRINT = 1
-    GUI_COLUMNSPAN_MYPRINT = 1
+    GUI_COLUMN_Joystick = 0
+    GUI_PADX_Joystick = 1
+    GUI_PADY_Joystick = 1
+    GUI_ROWSPAN_Joystick = 1
+    GUI_COLUMNSPAN_Joystick = 1
+
+    global GUI_ROW_MyPrint
+    global GUI_COLUMN_MyPrint
+    global GUI_PADX_MyPrint
+    global GUI_PADY_MyPrint
+    global GUI_ROWSPAN_MyPrint
+    global GUI_COLUMNSPAN_MyPrint
+    GUI_ROW_MyPrint = 2
+
+    GUI_COLUMN_MyPrint = 0
+    GUI_PADX_MyPrint = 1
+    GUI_PADY_MyPrint = 1
+    GUI_ROWSPAN_MyPrint = 1
+    GUI_COLUMNSPAN_MyPrint = 1
     #################################################
     #################################################
 
@@ -313,7 +313,7 @@ if __name__ == '__main__':
 
     global TabControlObject
     global Tab_MainControls
-    global Tab_JOYSTICK
+    global Tab_Joystick
     global Tab_MyPrint
 
     global GUI_RootAfterCallbackInterval_Milliseconds
@@ -325,35 +325,35 @@ if __name__ == '__main__':
     #################################################
     global JoystickHID_ReubenPython2and3ClassObject
 
-    global JOYSTICK_OPEN_FLAG
-    JOYSTICK_OPEN_FLAG = -1
+    global Joystick_OPEN_FLAG
+    Joystick_OPEN_FLAG = -1
 
-    global JOYSTICK_MostRecentDict
-    JOYSTICK_MostRecentDict = dict()
+    global Joystick_MostRecentDict
+    Joystick_MostRecentDict = dict()
 
-    global JOYSTICK_MostRecentDict_Joystick_Axis_Value_List
-    JOYSTICK_MostRecentDict_Joystick_Axis_Value_List = list()
+    global Joystick_MostRecentDict_Joystick_Axis_Value_List
+    Joystick_MostRecentDict_Joystick_Axis_Value_List = list()
 
-    global JOYSTICK_MostRecentDict_Joystick_Button_Value_List
-    JOYSTICK_MostRecentDict_Joystick_Button_Value_List = list()
+    global Joystick_MostRecentDict_Joystick_Button_Value_List
+    Joystick_MostRecentDict_Joystick_Button_Value_List = list()
 
-    global JOYSTICK_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List
-    JOYSTICK_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List = list()
+    global Joystick_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List
+    Joystick_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List = list()
 
-    global JOYSTICK_MostRecentDict_Joystick_Hat_Value_List
-    JOYSTICK_MostRecentDict_Joystick_Hat_Value_List = list()
+    global Joystick_MostRecentDict_Joystick_Hat_Value_List
+    Joystick_MostRecentDict_Joystick_Hat_Value_List = list()
 
-    global JOYSTICK_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List
-    JOYSTICK_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List = list()
+    global Joystick_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List
+    Joystick_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List = list()
 
-    global JOYSTICK_MostRecentDict_Joystick_Ball_Value_List
-    JOYSTICK_MostRecentDict_Joystick_Ball_Value_List = list()
+    global Joystick_MostRecentDict_Joystick_Ball_Value_List
+    Joystick_MostRecentDict_Joystick_Ball_Value_List = list()
 
-    global JOYSTICK_MostRecentDict_DataStreamingFrequency
-    JOYSTICK_MostRecentDict_DataStreamingFrequency = -11111.0
+    global Joystick_MostRecentDict_DataStreamingFrequency
+    Joystick_MostRecentDict_DataStreamingFrequency = -11111.0
 
-    global JOYSTICK_MostRecentDict_Time
-    JOYSTICK_MostRecentDict_Time = -11111.0
+    global Joystick_MostRecentDict_Time
+    Joystick_MostRecentDict_Time = -11111.0
     #################################################
     #################################################
 
@@ -361,8 +361,8 @@ if __name__ == '__main__':
     #################################################
     global MyPrint_ReubenPython2and3ClassObject
 
-    global MYPRINT_OPEN_FLAG
-    MYPRINT_OPEN_FLAG = -1
+    global MyPrint_OPEN_FLAG
+    MyPrint_OPEN_FLAG = -1
     #################################################
     #################################################
 
@@ -377,7 +377,7 @@ if __name__ == '__main__':
     else:
         root = None
         Tab_MainControls = None
-        Tab_JOYSTICK = None
+        Tab_Joystick = None
         Tab_MyPrint = None
     #################################################
     #################################################
@@ -401,17 +401,17 @@ if __name__ == '__main__':
     ########################
 
     global JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict
-    JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_JOYSTICK_FLAG),
-                                    ("root", Tab_JOYSTICK),
+    JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_Joystick_FLAG),
+                                    ("root", Tab_Joystick),
                                     ("EnableInternal_MyPrint_Flag", 1),
                                     ("NumberOfPrintLines", 10),
                                     ("UseBorderAroundThisGuiObjectFlag", 0),
-                                    ("GUI_ROW", GUI_ROW_JOYSTICK),
-                                    ("GUI_COLUMN", GUI_COLUMN_JOYSTICK),
-                                    ("GUI_PADX", GUI_PADX_JOYSTICK),
-                                    ("GUI_PADY", GUI_PADY_JOYSTICK),
-                                    ("GUI_ROWSPAN", GUI_ROWSPAN_JOYSTICK),
-                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_JOYSTICK)])
+                                    ("GUI_ROW", GUI_ROW_Joystick),
+                                    ("GUI_COLUMN", GUI_COLUMN_Joystick),
+                                    ("GUI_PADX", GUI_PADX_Joystick),
+                                    ("GUI_PADY", GUI_PADY_Joystick),
+                                    ("GUI_ROWSPAN", GUI_ROWSPAN_Joystick),
+                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_Joystick)])
 
     global JoystickHID_ReubenPython2and3ClassObject_setup_dict
     JoystickHID_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict),
@@ -425,10 +425,10 @@ if __name__ == '__main__':
                                                                 ("MainThread_TimeToSleepEachLoop", 0.010),
                                                                 ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag)])
 
-    if USE_JOYSTICK_FLAG == 1:
+    if USE_Joystick_FLAG == 1:
         try:
             JoystickHID_ReubenPython2and3ClassObject = JoystickHID_ReubenPython2and3Class(JoystickHID_ReubenPython2and3ClassObject_setup_dict)
-            JOYSTICK_OPEN_FLAG = JoystickHID_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            Joystick_OPEN_FLAG = JoystickHID_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
@@ -439,17 +439,17 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    if USE_MYPRINT_FLAG == 1:
+    if USE_MyPrint_FLAG == 1:
 
-        MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MYPRINT_FLAG),
+        MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MyPrint_FLAG),
                                                                         ("root", Tab_MyPrint),
                                                                         ("UseBorderAroundThisGuiObjectFlag", 0),
-                                                                        ("GUI_ROW", GUI_ROW_MYPRINT),
-                                                                        ("GUI_COLUMN", GUI_COLUMN_MYPRINT),
-                                                                        ("GUI_PADX", GUI_PADX_MYPRINT),
-                                                                        ("GUI_PADY", GUI_PADY_MYPRINT),
-                                                                        ("GUI_ROWSPAN", GUI_ROWSPAN_MYPRINT),
-                                                                        ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MYPRINT)])
+                                                                        ("GUI_ROW", GUI_ROW_MyPrint),
+                                                                        ("GUI_COLUMN", GUI_COLUMN_MyPrint),
+                                                                        ("GUI_PADX", GUI_PADX_MyPrint),
+                                                                        ("GUI_PADY", GUI_PADY_MyPrint),
+                                                                        ("GUI_ROWSPAN", GUI_ROWSPAN_MyPrint),
+                                                                        ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_MyPrint)])
 
         MyPrint_ReubenPython2and3ClassObject_setup_dict = dict([("NumberOfPrintLines", 10),
                                                                 ("WidthOfPrintingLabel", 200),
@@ -459,7 +459,7 @@ if __name__ == '__main__':
 
         try:
             MyPrint_ReubenPython2and3ClassObject = MyPrint_ReubenPython2and3Class(MyPrint_ReubenPython2and3ClassObject_setup_dict)
-            MYPRINT_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+            MyPrint_OPEN_FLAG = MyPrint_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
@@ -470,7 +470,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    if USE_JOYSTICK_FLAG == 1 and JOYSTICK_OPEN_FLAG != 1:
+    if USE_Joystick_FLAG == 1 and Joystick_OPEN_FLAG != 1:
         print("Failed to open JoystickHID_ReubenPython2and3Class.")
         ExitProgram_Callback()
     #################################################
@@ -478,7 +478,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    if USE_MYPRINT_FLAG == 1 and MYPRINT_OPEN_FLAG != 1:
+    if USE_MyPrint_FLAG == 1 and MyPrint_OPEN_FLAG != 1:
         print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
         ExitProgram_Callback()
     #################################################
@@ -499,28 +499,28 @@ if __name__ == '__main__':
 
         ################################################### GET's
         ###################################################
-        if JOYSTICK_OPEN_FLAG == 1:
+        if Joystick_OPEN_FLAG == 1:
 
-            JOYSTICK_MostRecentDict = JoystickHID_ReubenPython2and3ClassObject.GetMostRecentDataDict()
+            Joystick_MostRecentDict = JoystickHID_ReubenPython2and3ClassObject.GetMostRecentDataDict()
 
-            if "Time" in JOYSTICK_MostRecentDict:
-                JOYSTICK_MostRecentDict_Joystick_Axis_Value_List = JOYSTICK_MostRecentDict["Joystick_Axis_Value_List"]
-                JOYSTICK_MostRecentDict_Joystick_Button_Value_List = JOYSTICK_MostRecentDict["Joystick_Button_Value_List"]
-                JOYSTICK_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List = JOYSTICK_MostRecentDict["Joystick_Button_LatchingRisingEdgeEvents_List"]
-                JOYSTICK_MostRecentDict_Joystick_Hat_Value_List = JOYSTICK_MostRecentDict["Joystick_Hat_Value_List"]
-                JOYSTICK_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List = JOYSTICK_MostRecentDict["Joystick_Hat_LatchingRisingEdgeEvents_List"]
-                JOYSTICK_MostRecentDict_Joystick_Ball_Value_List = JOYSTICK_MostRecentDict["Joystick_Ball_Value_List"]
-                JOYSTICK_MostRecentDict_DataStreamingFrequency = JOYSTICK_MostRecentDict["DataStreamingFrequency"]
-                JOYSTICK_MostRecentDict_Time = JOYSTICK_MostRecentDict["Time"]
+            if "Time" in Joystick_MostRecentDict:
+                Joystick_MostRecentDict_Joystick_Axis_Value_List = Joystick_MostRecentDict["Joystick_Axis_Value_List"]
+                Joystick_MostRecentDict_Joystick_Button_Value_List = Joystick_MostRecentDict["Joystick_Button_Value_List"]
+                Joystick_MostRecentDict_Joystick_Button_LatchingRisingEdgeEvents_List = Joystick_MostRecentDict["Joystick_Button_LatchingRisingEdgeEvents_List"]
+                Joystick_MostRecentDict_Joystick_Hat_Value_List = Joystick_MostRecentDict["Joystick_Hat_Value_List"]
+                Joystick_MostRecentDict_Joystick_Hat_LatchingRisingEdgeEvents_List = Joystick_MostRecentDict["Joystick_Hat_LatchingRisingEdgeEvents_List"]
+                Joystick_MostRecentDict_Joystick_Ball_Value_List = Joystick_MostRecentDict["Joystick_Ball_Value_List"]
+                Joystick_MostRecentDict_DataStreamingFrequency = Joystick_MostRecentDict["DataStreamingFrequency"]
+                Joystick_MostRecentDict_Time = Joystick_MostRecentDict["Time"]
 
-                #print("JOYSTICK_MostRecentDict: " + str(JOYSTICK_MostRecentDict))
-                #print("JOYSTICK_MostRecentDict_Joystick_Axis_Value_List: " + str(JOYSTICK_MostRecentDict_Joystick_Axis_Value_List))
+                #print("Joystick_MostRecentDict: " + str(Joystick_MostRecentDict))
+                #print("Joystick_MostRecentDict_Joystick_Axis_Value_List: " + str(Joystick_MostRecentDict_Joystick_Axis_Value_List))
         ###################################################
         ###################################################
 
         ################################################### SET's
         ###################################################
-        if JOYSTICK_OPEN_FLAG == 1 and (CurrentTime_MainLoopThread - ResetLatchedValuesTime >= 5.0):
+        if Joystick_OPEN_FLAG == 1 and (CurrentTime_MainLoopThread - ResetLatchedValuesTime >= 5.0):
             JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(13)
             JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(17)
             JoystickHID_ReubenPython2and3ClassObject.ResetHatRisingEdgeEventLatch(0, 0)
@@ -538,12 +538,12 @@ if __name__ == '__main__':
     print("Exiting main program 'test_program_for_JoystickHID_ReubenPython2and3Class.")
 
     #################################################
-    if JOYSTICK_OPEN_FLAG == 1:
+    if Joystick_OPEN_FLAG == 1:
         JoystickHID_ReubenPython2and3ClassObject.ExitProgram_Callback()
     #################################################
 
     #################################################
-    if MYPRINT_OPEN_FLAG == 1:
+    if MyPrint_OPEN_FLAG == 1:
         MyPrint_ReubenPython2and3ClassObject.ExitProgram_Callback()
     #################################################
 

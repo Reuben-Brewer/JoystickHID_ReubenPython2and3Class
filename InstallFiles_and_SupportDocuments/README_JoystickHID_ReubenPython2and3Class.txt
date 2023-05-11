@@ -12,7 +12,7 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision F, 09/21/2022
+Software Revision G, 05/10/2023
 
 Verified working on: 
 Python 2.7, 3.8.
@@ -31,7 +31,7 @@ Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actu
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'pygame']
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['MyPrint_ReubenPython2and3Class']
 JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: ['future.builtins']
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All:['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
 
 #https://github.com/Reuben-Brewer/Joystick2DdotDisplay_ReubenPython2and3Class
 from Joystick2DdotDisplay_ReubenPython2and3Class import *
