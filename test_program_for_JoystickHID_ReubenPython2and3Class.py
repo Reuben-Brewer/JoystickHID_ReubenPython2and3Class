@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision G, 05/10/2023
+Software Revision H, 09/22/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04*, and Raspberry Pi Buster (no Mac testing yet).
 
@@ -30,6 +30,7 @@ import time
 import datetime
 import threading
 import collections
+import argparse
 #########################################################
 
 #########################################################
@@ -227,6 +228,77 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
+    #Joystick_NameDesired = "" #"" means that we don't care about the name.
+    #Joystick_NameDesired = "VKBsim Gladiator"
+    #Joystick_NameDesired = "3Dconnexion KMJ Emulator"
+    #Joystick_NameDesired = "vJoy Device"
+    #Joystick_NameDesired = "Tetherscript Virtual Joystick" #Position-control input on all axes
+    #Joystick_NameDesired = "SpaceMouse Compact" #Rate-control input on all axes (integrates values when off-center)
+    #Joystick_NameDesired = "Xbox Series X Controller" #Name when connected via Bluetooth
+    #Joystick_NameDesired = "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
+    #Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
+    #Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
+    #Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
+    Joystick_NameDesired = "Nintendo Switch Pro Controller"
+
+
+    Joystick_IntegerIDdesired = -1 #means that we don't care about the IntegerID.
+    Joystick_ShowJustDotMovingFlag = 0
+    Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
+    Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
+    Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay = 0 #13
+    Joystick_PrintInfoForAllDetectedJoysticksFlag = 1
+    Joystick_SearchAllJoysticksFlag = 1 #IMPORTANT: if opening by the joystick's name ONLY, then you must set "SearchAllJoysticksFlag" to 1.
+    #################################################
+    #################################################
+
+    ################################################# Put the argv parsing AFTER the parameter hard-coding so that we can over-ride it if desired.
+    #################################################
+    argparse_Object = argparse.ArgumentParser()
+    #nargs='?', const='arg_was_not_given' is the key to allowing us to not input an argument (use Pycharm "run")
+    argparse_Object.add_argument("-i", "--IntegerIDdesired", nargs='?', const='arg_was_not_given', required=False, help="IntegerIDdesired (integer)")
+    argparse_Object.add_argument("-n", "--NameDesired", nargs='?', const='arg_was_not_given', required=False, help="NameDesired (string)")
+    argparse_Object.add_argument("-s", "--SearchAllJoysticksFlag", nargs='?', const='arg_was_not_given', required=False, help="SearchAllJoysticksFlag (0/1)")
+    ARGV_Dict = vars(argparse_Object.parse_args())
+    print("ARGV_Dict: " + str(ARGV_Dict))
+
+    ################################################# PUTTING THIS AFTER EVERYTHING SO THAT WE CAN OVERRIDE -P FILE OPTIONS
+    if ARGV_Dict["IntegerIDdesired"] != None and ARGV_Dict["NameDesired"] == None:
+        Joystick_IntegerIDdesired = int(ARGV_Dict["IntegerIDdesired"])
+        Joystick_NameDesired = "" #Let any english string name be used.
+
+    print("Joystick_IntegerIDdesired: " + str(Joystick_IntegerIDdesired))
+    #################################################
+
+    #################################################
+    if ARGV_Dict["NameDesired"] != None and ARGV_Dict["IntegerIDdesired"] == None:
+        Joystick_NameDesired = str(ARGV_Dict["NameDesired"])
+        Joystick_IntegerIDdesired = -1 #Let any integer ID be used.
+
+    print("Joystick_NameDesired: " + str(Joystick_NameDesired))
+    #################################################
+
+    #################################################
+    if ARGV_Dict["NameDesired"] != None and ARGV_Dict["IntegerIDdesired"] != None:
+        Joystick_IntegerIDdesired = int(ARGV_Dict["IntegerIDdesired"])
+        Joystick_NameDesired = str(ARGV_Dict["NameDesired"])
+
+    print("Joystick_IntegerIDdesired: " + str(Joystick_IntegerIDdesired))
+    print("Joystick_NameDesired: " + str(Joystick_NameDesired))
+    #################################################
+
+    #################################################
+    if ARGV_Dict["SearchAllJoysticksFlag"] != None:
+        Joystick_SearchAllJoysticksFlag = str(ARGV_Dict["SearchAllJoysticksFlag"])
+
+    print("Joystick_SearchAllJoysticksFlag: " + str(Joystick_SearchAllJoysticksFlag))
+    #################################################
+
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
     global USE_GUI_FLAG
     USE_GUI_FLAG = 1
 
@@ -385,21 +457,6 @@ if __name__ == '__main__':
     #################################################
     #################################################
 
-    ########################
-    Joystick_NameDesired = "" #"" means that we don't care about the name.
-    #Joystick_NameDesired = "VKBsim Gladiator"
-    #Joystick_NameDesired = "3Dconnexion KMJ Emulator"
-    #Joystick_NameDesired = "Tetherscript Virtual Joystick" #Position-control input on all axes
-    #Joystick_NameDesired = "SpaceMouse Compact" #Rate-control input on all axes (integrates values when off-center)
-
-    Joystick_IntegerIDdesired = -1 #-1 means that we don't care about the IntegerID.
-    Joystick_ShowJustDotMovingFlag = 0
-    Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
-    Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
-    Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay = 0 #13
-    Joystick_PrintInfoForAllDetectedJoysticksFlag = 1
-    ########################
-
     global JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict
     JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_Joystick_FLAG),
                                     ("root", Tab_Joystick),
@@ -423,7 +480,8 @@ if __name__ == '__main__':
                                                                 ("Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay", Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay),
                                                                 ("Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay", Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay),
                                                                 ("MainThread_TimeToSleepEachLoop", 0.010),
-                                                                ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag)])
+                                                                ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag),
+                                                                ("Joystick_SearchAllJoysticksFlag", Joystick_SearchAllJoysticksFlag)])
 
     if USE_Joystick_FLAG == 1:
         try:
@@ -521,10 +579,13 @@ if __name__ == '__main__':
         ################################################### SET's
         ###################################################
         if Joystick_OPEN_FLAG == 1 and (CurrentTime_MainLoopThread - ResetLatchedValuesTime >= 5.0):
-            JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(13)
-            JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(17)
-            JoystickHID_ReubenPython2and3ClassObject.ResetHatRisingEdgeEventLatch(0, 0)
-            JoystickHID_ReubenPython2and3ClassObject.ResetHatRisingEdgeEventLatch(0, 1)
+            #JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(13)
+            #JoystickHID_ReubenPython2and3ClassObject.ResetButtonRisingEdgeEventLatch(17)
+            #JoystickHID_ReubenPython2and3ClassObject.ResetHatRisingEdgeEventLatch(0, 0)
+            #JoystickHID_ReubenPython2and3ClassObject.ResetHatRisingEdgeEventLatch(0, 1)
+
+            JoystickHID_ReubenPython2and3ClassObject.Rumble(Rumble_LowFrequencyMotor_Strength0to1=1.0, Rumble_HighFrequencyMotor_Strength0to1=1.0, Rumble_DurationMilliseconds=1000)
+
             ResetLatchedValuesTime = CurrentTime_MainLoopThread
         ###################################################
         ###################################################
