@@ -37,15 +37,25 @@ the "Nintendo Switch Pro Controller" must be opened first (or else it will stop 
 Have tested on the following joysticks:
 
 *Joystick_NameDesired = "VKBsim Gladiator"
+
 *Joystick_NameDesired = "3Dconnexion KMJ Emulator"
+
 *Joystick_NameDesired = "vJoy Device"
+
 *Joystick_NameDesired = "Tetherscript Virtual Joystick"
+
 *Joystick_NameDesired = "SpaceMouse Compact"
+
 *Joystick_NameDesired = "Xbox Series X Controller" #Name when connected via Bluetooth
+
 *Joystick_NameDesired = "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
+
 *Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
+
 *Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
+
 *Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
+
 *Joystick_NameDesired = "Nintendo Switch Pro Controller"
 
 ###########################
