@@ -28,7 +28,7 @@ Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actu
 For instance, in Windows 10, if we're opening both a "VKBsim Gladiator" and "Nintendo Switch Pro Controller",
 the "Nintendo Switch Pro Controller" must be opened first (or else it will stop streaming data once the "VKBsim Gladiator" is opened).
 
-***Note: IMPORTANT: if opening by the joystick's name ONLY, then you must set "SearchAllJoysticksFlag" to 1.
+***Note: IMPORTANT: if opening by the joystick's name ONLY (with integer ID = -1), then you must set "SearchAllJoysticksFlag" to 1.
 
 Have tested on the following joysticks:
 *Joystick_NameDesired = "VKBsim Gladiator"
