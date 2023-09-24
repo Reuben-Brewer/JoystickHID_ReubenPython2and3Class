@@ -12,7 +12,7 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision G, 05/10/2023
+Software Revision H, 09/22/2023
 
 Verified working on: 
 
@@ -26,8 +26,27 @@ Raspberry Pi Buster
 
 (no Mac testing yet)
 
-*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick (such as the VKBsim Gladiator).
-Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
+*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
+
+**Note: If opening more than one joystick at a time, sometimes the order in which the joysticks are opened matters.
+For instance, in Windows 10, if we're opening both a "VKBsim Gladiator" and "Nintendo Switch Pro Controller",
+the "Nintendo Switch Pro Controller" must be opened first (or else it will stop streaming data once the "VKBsim Gladiator" is opened).
+
+***Note: IMPORTANT: if opening by the joystick's name ONLY, then you must set "SearchAllJoysticksFlag" to 1.
+
+Have tested on the following joysticks:
+
+*Joystick_NameDesired = "VKBsim Gladiator"
+*Joystick_NameDesired = "3Dconnexion KMJ Emulator"
+*Joystick_NameDesired = "vJoy Device"
+*Joystick_NameDesired = "Tetherscript Virtual Joystick"
+*Joystick_NameDesired = "SpaceMouse Compact"
+*Joystick_NameDesired = "Xbox Series X Controller" #Name when connected via Bluetooth
+*Joystick_NameDesired = "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
+*Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
+*Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
+*Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
+*Joystick_NameDesired = "Nintendo Switch Pro Controller"
 
 ###########################
 
