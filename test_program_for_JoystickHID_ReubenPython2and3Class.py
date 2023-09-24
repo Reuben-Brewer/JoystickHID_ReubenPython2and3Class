@@ -234,13 +234,12 @@ if __name__ == '__main__':
     #Joystick_NameDesired = "vJoy Device"
     #Joystick_NameDesired = "Tetherscript Virtual Joystick" #Position-control input on all axes
     #Joystick_NameDesired = "SpaceMouse Compact" #Rate-control input on all axes (integrates values when off-center)
-    #Joystick_NameDesired = "Xbox Series X Controller" #Name when connected via Bluetooth
-    #Joystick_NameDesired = "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
     #Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
     #Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
     #Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
-    Joystick_NameDesired = "Nintendo Switch Pro Controller"
-
+    #Joystick_NameDesired = "Nintendo Switch Pro Controller"
+    #Joystick_NameDesired = DOES NOT WORK: "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
+    #Joystick_NameDesired = DOES NOT WORK: "Xbox Series X Controller" #Name when connected via Bluetooth
 
     Joystick_IntegerIDdesired = -1 #means that we don't care about the IntegerID.
     Joystick_ShowJustDotMovingFlag = 0
