@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision H, 09/22/2023
+Software Revision I, 02/08/2025
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04*, and Raspberry Pi Buster (no Mac testing yet).
 
@@ -31,6 +31,7 @@ import datetime
 import threading
 import collections
 import argparse
+import keyboard
 #########################################################
 
 #########################################################
@@ -58,19 +59,6 @@ def getPreciseSecondsTimeStampString():
     ts = time.time()
 
     return ts
-##########################################################################################################
-##########################################################################################################
-
-##########################################################################################################
-##########################################################################################################
-def TestButtonResponse():
-    global MyPrint_ReubenPython2and3ClassObject
-    global USE_MyPrint_FLAG
-
-    if USE_MyPrint_FLAG == 1:
-        MyPrint_ReubenPython2and3ClassObject.my_print("Test Button was Pressed!")
-    else:
-        print("Test Button was Pressed!")
 ##########################################################################################################
 ##########################################################################################################
 
@@ -105,7 +93,10 @@ def GUI_update_clock():
                 MyPrint_ReubenPython2and3ClassObject.GUI_update_clock()
             #########################################################
 
+            #########################################################
             root.after(GUI_RootAfterCallbackInterval_Milliseconds, GUI_update_clock)
+            #########################################################
+
         #########################################################
         #########################################################
 
@@ -114,7 +105,7 @@ def GUI_update_clock():
 
 ##########################################################################################################
 ##########################################################################################################
-def ExitProgram_Callback():
+def ExitProgram_Callback(OptionalArugment = 0):
     global EXIT_PROGRAM_FLAG
 
     print("ExitProgram_Callback event fired!")
@@ -177,22 +168,21 @@ def GUI_Thread():
     #################################################
     #################################################
 
-    #################################################
-    TestButton = Button(Tab_MainControls, text='Test Button', state="normal", width=20, command=lambda i=1: TestButtonResponse())
-    TestButton.grid(row=0, column=0, padx=5, pady=1)
-    #################################################
-
     ################################################# THIS BLOCK MUST COME 2ND-TO-LAST IN def GUI_Thread() IF USING TABS.
+    #################################################
     root.protocol("WM_DELETE_WINDOW", ExitProgram_Callback)  # Set the callback function for when the window's closed.
     root.title("test_program_for_JoystickHID_ReubenPython2and3Class")
     root.geometry('%dx%d+%d+%d' % (root_width, root_height, root_Xpos, root_Ypos)) # set the dimensions of the screen and where it is placed
     root.after(GUI_RootAfterCallbackInterval_Milliseconds, GUI_update_clock)
     root.mainloop()
     #################################################
+    #################################################
 
     #################################################  THIS BLOCK MUST COME LAST IN def GUI_Thread() REGARDLESS OF CODE.
+    #################################################
     root.quit() #Stop the GUI thread, MUST BE CALLED FROM GUI_Thread
     root.destroy() #Close down the GUI thread, MUST BE CALLED FROM GUI_Thread
+    #################################################
     #################################################
 
 ##########################################################################################################
@@ -236,7 +226,7 @@ if __name__ == '__main__':
     #Joystick_NameDesired = "SpaceMouse Compact" #Rate-control input on all axes (integrates values when off-center)
     #Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
     #Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
-    #Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
+    Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
     #Joystick_NameDesired = "Nintendo Switch Pro Controller"
     #Joystick_NameDesired = DOES NOT WORK: "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
     #Joystick_NameDesired = DOES NOT WORK: "Xbox Series X Controller" #Name when connected via Bluetooth
@@ -245,7 +235,7 @@ if __name__ == '__main__':
     Joystick_ShowJustDotMovingFlag = 0
     Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
     Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
-    Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay = 0 #13
+    Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay = [9, 10]
     Joystick_PrintInfoForAllDetectedJoysticksFlag = 1
     Joystick_SearchAllJoysticksFlag = 1 #IMPORTANT: if opening by the joystick's name ONLY, then you must set "SearchAllJoysticksFlag" to 1.
     #################################################
@@ -309,6 +299,9 @@ if __name__ == '__main__':
 
     global USE_MyPrint_FLAG
     USE_MyPrint_FLAG = 1
+
+    global USE_KEYBOARD_FLAG
+    USE_KEYBOARD_FLAG = 1
     #################################################
     #################################################
 
@@ -455,7 +448,13 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
+    if USE_KEYBOARD_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
+        keyboard.on_press_key("esc", ExitProgram_Callback)
+    #################################################
+    #################################################
 
+    #################################################
+    #################################################
     global JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict
     JoystickHID_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_Joystick_FLAG),
                                     ("root", Tab_Joystick),
@@ -477,26 +476,36 @@ if __name__ == '__main__':
                                                                 ("Joystick_ShowJustDotMovingFlag", Joystick_ShowJustDotMovingFlag),
                                                                 ("Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay", Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay),
                                                                 ("Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay", Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay),
-                                                                ("Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay", Joystick_Button_Index_ToDisplayAsDotColorOn2DdotDisplay),
+                                                                ("Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay", Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay),
                                                                 ("MainThread_TimeToSleepEachLoop", 0.010),
                                                                 ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag),
                                                                 ("Joystick_SearchAllJoysticksFlag", Joystick_SearchAllJoysticksFlag)])
 
-    if USE_Joystick_FLAG == 1:
+    if USE_Joystick_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
         try:
             JoystickHID_ReubenPython2and3ClassObject = JoystickHID_ReubenPython2and3Class(JoystickHID_ReubenPython2and3ClassObject_setup_dict)
             Joystick_OPEN_FLAG = JoystickHID_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
 
         except:
             exceptions = sys.exc_info()[0]
-            print("JoystickHID_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions, 0)
-            traceback.print_exc()
+            print("JoystickHID_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions)
+            #traceback.print_exc()
     #################################################
     #################################################
 
     #################################################
     #################################################
-    if USE_MyPrint_FLAG == 1:
+    if USE_Joystick_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if Joystick_OPEN_FLAG != 1:
+                print("Failed to open JoystickHID_ReubenPython2and3Class.")
+                ExitProgram_Callback()
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
+    if USE_MyPrint_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
 
         MyPrint_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_MyPrint_FLAG),
                                                                         ("root", Tab_MyPrint),
@@ -521,23 +530,17 @@ if __name__ == '__main__':
         except:
             exceptions = sys.exc_info()[0]
             print("MyPrint_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions)
-            traceback.print_exc()
+            #traceback.print_exc()
     #################################################
     #################################################
 
     #################################################
     #################################################
-    if USE_Joystick_FLAG == 1 and Joystick_OPEN_FLAG != 1:
-        print("Failed to open JoystickHID_ReubenPython2and3Class.")
-        ExitProgram_Callback()
-    #################################################
-    #################################################
-
-    #################################################
-    #################################################
-    if USE_MyPrint_FLAG == 1 and MyPrint_OPEN_FLAG != 1:
-        print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
-        ExitProgram_Callback()
+    if USE_MyPrint_FLAG == 1:
+        if EXIT_PROGRAM_FLAG == 0:
+            if MyPrint_OPEN_FLAG != 1:
+                print("Failed to open MyPrint_ReubenPython2and3ClassObject.")
+                ExitProgram_Callback()
     #################################################
     #################################################
 

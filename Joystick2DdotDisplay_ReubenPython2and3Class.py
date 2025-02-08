@@ -6,7 +6,7 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision H, 09/22/2023
+Software Revision I, 09/26/2023
 
 Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04, and Raspberry Pi Buster (no Mac testing yet).
 '''
@@ -197,12 +197,7 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
 
         #########################################################
         #########################################################
-        if "DisplayZeroCrosshairsFlag" in setup_dict:
-            self.DisplayZeroCrosshairsFlag = self.PassThrough0and1values_ExitProgramOtherwise("DisplayZeroCrosshairsFlag", setup_dict["DisplayZeroCrosshairsFlag"])
-        else:
-            self.DisplayZeroCrosshairsFlag = 0
-
-        print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: DisplayZeroCrosshairsFlag: " + str(self.DisplayZeroCrosshairsFlag))
+        self.ProcessSetupDictInputsTheCanBeLiveChanged(setup_dict)
         #########################################################
         #########################################################
     
@@ -236,12 +231,13 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
 
         ### Create black outline around canvas
         self.JoystickXYboxCanvas.create_rectangle(0.5*self.JoystickXYboxCanvas_BorderWidth,
-                                                 0.5 * self.JoystickXYboxCanvas_BorderWidth,
-                                                 self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
-                                                 self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
-                                                 outline="black",
-                                                 fill="white",
-                                                 width=self.JoystickXYboxCanvas_BorderWidth)
+                                                0.5 * self.JoystickXYboxCanvas_BorderWidth,
+                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
+                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
+                                                outline="black",
+                                                fill="white",
+                                                width=self.JoystickXYboxCanvas_BorderWidth,
+                                                tags='BorderRectangle_Tag')
         ###
 
         ### Create cicle
@@ -272,6 +268,46 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
     #######################################################################################################################
     def __del__(self):
         pass
+    #######################################################################################################################
+    #######################################################################################################################
+
+    #######################################################################################################################
+    #######################################################################################################################
+    def ProcessSetupDictInputsTheCanBeLiveChanged(self, setup_dict):
+
+        #########################################################
+        #########################################################
+        if "Crosshairs_ShowFlag" in setup_dict:
+            self.Crosshairs_ShowFlag = self.PassThrough0and1values_ExitProgramOtherwise("Crosshairs_ShowFlag", setup_dict["Crosshairs_ShowFlag"])
+        else:
+            self.Crosshairs_ShowFlag = 0
+
+        print("Joystick2DdotDisplay_ReubenPython2and3Class ProcessSetupDictInputsTheCanBeLiveChanged: Crosshairs_ShowFlag: " + str(self.Crosshairs_ShowFlag))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        if "Crosshairs_VerticalLine_Xvalue" in setup_dict:
+            self.Crosshairs_VerticalLine_Xvalue = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Crosshairs_VerticalLine_Xvalue", setup_dict["Crosshairs_VerticalLine_Xvalue"], -1.0, 1.0)
+        else:
+            self.Crosshairs_VerticalLine_Xvalue = 0.0
+
+        print("JoystickHID_ReubenPython2and3Class ProcessSetupDictInputsTheCanBeLiveChanged: Crosshairs_VerticalLine_Xvalue: " + str(self.Crosshairs_VerticalLine_Xvalue))
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        if "Crosshairs_HorizontalLine_Yvalue" in setup_dict:
+            self.Crosshairs_HorizontalLine_Yvalue = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Crosshairs_HorizontalLine_Yvalue", setup_dict["Crosshairs_HorizontalLine_Yvalue"], -1.0, 1.0)
+        else:
+            self.Crosshairs_HorizontalLine_Yvalue = 0.0
+
+        print("JoystickHID_ReubenPython2and3Class ProcessSetupDictInputsTheCanBeLiveChanged: Crosshairs_HorizontalLine_Yvalue: " + str(self.Crosshairs_HorizontalLine_Yvalue))
+        #########################################################
+        #########################################################
+
     #######################################################################################################################
     #######################################################################################################################
 
@@ -399,7 +435,8 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
                                                     CircleBoundingBoxCoordinates_CanvasCoord[3],
                                                     outline=Color,
                                                     fill=Color,
-                                                    width=0)
+                                                    width=0,
+                                                    tags="CircleOnCanvas_Tag")
         return CircleObjectToReturn
     ##########################################################################################################
     ##########################################################################################################
@@ -475,7 +512,7 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
                 try:
 
                     ### Debug drawing functions
-                    #self.CreateAndDrawCircleOnCanvas_CanvasCoord(self.JoystickXYboxCanvas, 0, 0, self.JoystickXYboxCanvas_PointerCircle_Radius, "green")
+                    #self.CreateAndDrawCircleOnCanvas_CanvasCoord(self.JoystickXYboxCanvas, 0, 0, self.JoystickXYboxCanvas_PointerCircle_Radius, "green") #ONLY A TESTING LINE
                     #PointCoords_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([0, 0])
                     #PointCoords_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([0, 1])
                     #PointCoords_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([1, 1])
@@ -503,25 +540,33 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
                     #######################################################
                     
                     #######################################################
-                    if self.DisplayZeroCrosshairsFlag == 1:
+                    if self.Crosshairs_ShowFlag == 1:
+
+
+                        HorizontalLineCoords_LeftOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([-1.0, self.Crosshairs_HorizontalLine_Yvalue])
+                        HorizontalLineCoords_RightOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([1.0, self.Crosshairs_HorizontalLine_Yvalue])
+
+                        VerticalLineCoords_BottomOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([self.Crosshairs_VerticalLine_Xvalue, -1.0])
+                        VerticalLineCoords_TopOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([self.Crosshairs_VerticalLine_Xvalue, 1.0])
                         
-                        HorizontalLineCoords_BottomOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([-1.0, 0.0])
-                        HorizontalLineCoords_TopOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([1.0, 0.0])
-                        
-                        VerticalLineCoords_BottomOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([0.0, -1.0])
-                        VerticalLineCoords_TopOfLine_CanvasCoord = self.ConvertMathPointToJoystickCanvasCoordinates([0.0, 1.0])
-                        
-                        self.JoystickXYboxCanvas.create_line(HorizontalLineCoords_BottomOfLine_CanvasCoord[0],
-                                                             HorizontalLineCoords_BottomOfLine_CanvasCoord[1],
-                                                             HorizontalLineCoords_TopOfLine_CanvasCoord[0],
-                                                             HorizontalLineCoords_TopOfLine_CanvasCoord[1],
-                                                             fill="black", width=1) #dash=(10)
-                        
+                        #id = C.create_line(x0, y0, x1, y1, ..., xn, yn, option, ...)
+                        self.JoystickXYboxCanvas.delete("HorizontalLine_tag")
+                        self.JoystickXYboxCanvas.create_line(HorizontalLineCoords_LeftOfLine_CanvasCoord[0] + 1*self.JoystickXYboxCanvas_BorderWidth, #Don't cross the border
+                                                             HorizontalLineCoords_LeftOfLine_CanvasCoord[1],
+                                                             HorizontalLineCoords_RightOfLine_CanvasCoord[0] - 1*self.JoystickXYboxCanvas_BorderWidth, #Don't cross the border
+                                                             HorizontalLineCoords_RightOfLine_CanvasCoord[1],
+                                                             fill="black",
+                                                             width=1,
+                                                             tags="HorizontalLine_tag") #dash=(10)
+
+                        self.JoystickXYboxCanvas.delete("VerticalLine_tag")
                         self.JoystickXYboxCanvas.create_line(VerticalLineCoords_BottomOfLine_CanvasCoord[0],
-                                                             VerticalLineCoords_BottomOfLine_CanvasCoord[1],
+                                                             VerticalLineCoords_BottomOfLine_CanvasCoord[1] - 1*self.JoystickXYboxCanvas_BorderWidth, #Don't cross the border
                                                              VerticalLineCoords_TopOfLine_CanvasCoord[0],
-                                                             VerticalLineCoords_TopOfLine_CanvasCoord[1],
-                                                             fill="black", width=1) #dash=(10)
+                                                             VerticalLineCoords_TopOfLine_CanvasCoord[1] + 1*self.JoystickXYboxCanvas_BorderWidth, #Don't cross the border
+                                                             fill="black",
+                                                             width=1,
+                                                             tags="VerticalLine_tag") #dash=(10)
                     #######################################################
 
                 except:
