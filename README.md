@@ -12,21 +12,22 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision H, 09/22/2023
+Software Revision I, 02/08/2025
 
-Verified working on: 
+Verified working on:
 
-Python 2.7, 3.8.
+Python 2.7, 3.12.
 
 Windows 8.1, 10 64-bit
 
 Ubuntu 20.04*
 
-Raspberry Pi Buster 
+Raspberry Pi Buster
 
 (no Mac testing yet)
 
-*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
+*Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick (such as the VKBsim Gladiator).
+Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the actual values are that are streaming from the joystick without going through JoystickHID_ReubenPython2and3Class.*
 
 **Note: If opening more than one joystick at a time, sometimes the order in which the joysticks are opened matters.
 For instance, in Windows 10, if we're opening both a "VKBsim Gladiator" and "Nintendo Switch Pro Controller",
@@ -54,9 +55,10 @@ Have tested on the following joysticks:
 
 *Joystick_NameDesired = "Nintendo Switch Pro Controller"
 
-*Joystick_NameDesired = DOES NOT WORK "Xbox Series X Controller" #Name when connected via Bluetooth
+*Joystick_NameDesired = DOES NOT WORK: "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
 
-*Joystick_NameDesired = DOES NOT WORK "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
+*Joystick_NameDesired = DOES NOT WORK: "Xbox Series X Controller" #Name when connected via Bluetooth
+
 ###########################
 
 ########################### Python module installation instructions, all OS's
