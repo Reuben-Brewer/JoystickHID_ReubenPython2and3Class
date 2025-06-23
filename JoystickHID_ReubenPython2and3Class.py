@@ -6,9 +6,9 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision I, 02/08/2025
+Software Revision J, 06/23/2025
 
-Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04*, and Raspberry Pi Buster (no Mac testing yet).
+Verified working on: Python 3.11/12 for Windows 10/11 64-bit, Ubuntu 20.04*, and Raspberry Pi Bookworm.
 
 *Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick
 (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the
@@ -322,6 +322,20 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         print("JoystickHID_ReubenPython2and3Class __init__: Joystick_ShowJustDotMovingFlag: " + str(self.Joystick_ShowJustDotMovingFlag))
         #########################################################
         #########################################################
+        
+        #########################################################
+        #########################################################
+        #For instance, the name "UHID Gamepad Device #4" would yield Joystick_IntegerIDdetected_ExtractedFromJoystickName = 4.
+        #Pygame would still open by Joystick_IntegerIDdetected, but we would match-and-open the detected joystick by Joystick_IntegerIDdetected_ExtractedFromJoystickName.
+
+        if "AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag" in setup_dict:
+            self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = self.PassThrough0and1values_ExitProgramOtherwise("AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag", setup_dict["AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag"])
+        else:
+            self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = 0
+
+        print("JoystickHID_ReubenPython2and3Class __init__: AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag: " + str(self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag))
+        #########################################################
+        #########################################################
 
         #########################################################
         #########################################################
@@ -347,6 +361,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
             self.Joystick_NameDetected = self.Joystick_DetectedParameters_Dict["Joystick_NameDetected"]
             self.Joystick_IntegerIDdetected = self.Joystick_DetectedParameters_Dict["Joystick_IntegerIDdetected"]
+            self.Joystick_IntegerIDdetected_ExtractedFromJoystickName = self.Joystick_DetectedParameters_Dict["Joystick_IntegerIDdetected_ExtractedFromJoystickName"]
             self.Joystick_NumberOfAxesDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfAxesDetected"]
             self.Joystick_NumberOfButtonsDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfButtonsDetected"]
             self.Joystick_NumberOfHatsDetected = self.Joystick_DetectedParameters_Dict["Joystick_NumberOfHatsDetected"]
@@ -482,6 +497,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
             #########################################################
             #########################################################
 
+            '''
             #########################################################
             #########################################################
             if self.Joystick_NumberOfJoysticksDetected < IntegerIDdesired:
@@ -489,6 +505,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                 return JoystickDictToReturn
             #########################################################
             #########################################################
+            '''
 
             #########################################################
             #########################################################
@@ -514,6 +531,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
                 Joystick_NameDetected = Joystick_Object.get_name()
                 Joystick_IntegerIDdetected = Joystick_Object.get_id()
+                Joystick_IntegerIDdetected_ExtractedFromJoystickName = -1
                 Joystick_NumberOfAxesDetected = Joystick_Object.get_numaxes()
                 Joystick_NumberOfButtonsDetected = Joystick_Object.get_numbuttons()
                 Joystick_NumberOfHatsDetected = Joystick_Object.get_numhats()
@@ -526,6 +544,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                     self.MyPrint_WithoutLogFile("********************************************")
                     self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NameDetected: " + str(Joystick_NameDetected))
                     self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_IntegerIDdetected: " + str(Joystick_IntegerIDdetected))
+                    self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_IntegerIDdetected_ExtractedFromJoystickName: " + str(Joystick_IntegerIDdetected_ExtractedFromJoystickName))
                     self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfAxesDetected: " + str(Joystick_NumberOfAxesDetected))
                     self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfButtonsDetected: " + str(Joystick_NumberOfButtonsDetected))
                     self.MyPrint_WithoutLogFile("AnalyzeAndInitializeJoystick, Joystick_NumberOfHatsDetected: " + str(Joystick_NumberOfHatsDetected))
@@ -549,10 +568,26 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
                 Joystick_NameDetected = Joystick_Object.get_name()
                 Joystick_IntegerIDdetected = Joystick_Object.get_id()
+                Joystick_IntegerIDdetected_ExtractedFromJoystickName = -1
                 Joystick_NumberOfAxesDetected = Joystick_Object.get_numaxes()
                 Joystick_NumberOfButtonsDetected = Joystick_Object.get_numbuttons()
                 Joystick_NumberOfHatsDetected = Joystick_Object.get_numhats()
                 Joystick_NumberOfBallsDetected = Joystick_Object.get_numballs()
+
+                ###########################
+                if self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag == 1:
+                    try:
+                        Joystick_NameDetected_NumberSignIndex = Joystick_NameDetected.find("#")
+
+                        if Joystick_NameDetected_NumberSignIndex != -1:
+                            Joystick_IntegerIDdetected_ExtractedFromJoystickName = int(Joystick_NameDetected[Joystick_NameDetected_NumberSignIndex+1:])
+
+                    except:
+                        exceptions = sys.exc_info()[0]
+                        print("Joystick_IntegerIDdetected_ExtractedFromJoystickName, Exceptions: %s" % exceptions)
+                        traceback.print_exc()
+                ###########################
+
 
                 Joystick_Object.quit()
 
@@ -570,13 +605,24 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                 ###########################
 
                 ###########################
-                if IntegerIDdesired != -1: #Meaning that we really care what the IntegerID is
-                    if IntegerIDdesired == Joystick_IntegerIDdetected:
-                        IntegerIDmatchFlag = 1
+                if self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag == 0:
+
+                    if IntegerIDdesired != -1: #Meaning that we really care what the IntegerID is
+                        if IntegerIDdesired == Joystick_IntegerIDdetected:
+                            IntegerIDmatchFlag = 1
+                        else:
+                            IntegerIDmatchFlag = 0
                     else:
-                        IntegerIDmatchFlag = 0
+                        IntegerIDmatchFlag = 1
                 else:
-                    IntegerIDmatchFlag = 1
+
+                    if IntegerIDdesired != -1: #Meaning that we really care what the IntegerID is
+                        if IntegerIDdesired == Joystick_IntegerIDdetected_ExtractedFromJoystickName:
+                            IntegerIDmatchFlag = 1
+                        else:
+                            IntegerIDmatchFlag = 0
+                    else:
+                        IntegerIDmatchFlag = 1
                 ###########################
 
                 ###########################
@@ -589,6 +635,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                                                 ("Joystick_Object", Joystick_Object),
                                                 ("Joystick_NameDetected", Joystick_NameDetected),
                                                 ("Joystick_IntegerIDdetected", Joystick_IntegerIDdetected),
+                                                ("Joystick_IntegerIDdetected_ExtractedFromJoystickName", Joystick_IntegerIDdetected_ExtractedFromJoystickName),
                                                 ("Joystick_NumberOfAxesDetected", Joystick_NumberOfAxesDetected),
                                                 ("Joystick_NumberOfButtonsDetected", Joystick_NumberOfButtonsDetected),
                                                 ("Joystick_NumberOfHatsDetected", Joystick_NumberOfHatsDetected),
@@ -1088,6 +1135,7 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                     self.DeviceInfo_Label["text"] = str(self.NameToDisplay_UserSet) +\
                                                      "\nJoystick Name: " + self.Joystick_NameDetected +\
                                                     "\nJoystick ID: " + str(self.Joystick_IntegerIDdetected) + \
+                                                    "\nJoystick ID, Extracted from name: " + str(self.Joystick_IntegerIDdetected_ExtractedFromJoystickName) + \
                                                     "\nNumber of Axes: " + str(self.Joystick_NumberOfAxesDetected) + \
                                                     "\nNumber of Buttons: " + str(self.Joystick_NumberOfButtonsDetected) + \
                                                     "\nNumber of Hats: " + str(self.Joystick_NumberOfHatsDetected) + \

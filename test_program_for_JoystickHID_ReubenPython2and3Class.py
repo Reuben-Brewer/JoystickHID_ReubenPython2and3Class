@@ -6,9 +6,9 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision I, 02/08/2025
+Software Revision J, 06/23/2025
 
-Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit, Ubuntu 20.04*, and Raspberry Pi Buster (no Mac testing yet).
+Verified working on: Python 3.11/12 for Windows 10/11 64-bit, Ubuntu 20.04*, and Raspberry Pi Bookworm.
 
 *Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of Joystick
 (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the
@@ -35,14 +35,9 @@ import keyboard
 #########################################################
 
 #########################################################
-if sys.version_info[0] < 3:
-    from Tkinter import * #Python 2
-    import tkFont
-    import ttk
-else:
-    from tkinter import * #Python 3
-    import tkinter.font as tkFont #Python 3
-    from tkinter import ttk
+from tkinter import *
+import tkinter.font as tkFont
+from tkinter import ttk
 #########################################################
 
 #########################################################
@@ -151,12 +146,13 @@ def GUI_Thread():
         Tab_MyPrint = ttk.Frame(TabControlObject)
         TabControlObject.add(Tab_MyPrint, text='   MyPrint Terminal   ')
 
-        TabControlObject.pack(expand=1, fill="both")  # CANNOT MIX PACK AND GRID IN THE SAME FRAME/TAB, SO ALL .GRID'S MUST BE CONTAINED WITHIN THEIR OWN FRAME/TAB.
+        TabControlObject.grid(row=0, column=0, sticky='nsew')
 
         ############# #Set the tab header font
         TabStyle = ttk.Style()
         TabStyle.configure('TNotebook.Tab', font=('Helvetica', '12', 'bold'))
         #############
+
         #################################################
     else:
         #################################################
@@ -218,7 +214,7 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
-    #Joystick_NameDesired = "" #"" means that we don't care about the name.
+    Joystick_NameDesired = "" #"" means that we don't care about the name.
     #Joystick_NameDesired = "VKBsim Gladiator"
     #Joystick_NameDesired = "3Dconnexion KMJ Emulator"
     #Joystick_NameDesired = "vJoy Device"
@@ -226,19 +222,24 @@ if __name__ == '__main__':
     #Joystick_NameDesired = "SpaceMouse Compact" #Rate-control input on all axes (integrates values when off-center)
     #Joystick_NameDesired = "Core (Plus) Wired Controller" #NintendoSwitch wired controller by Core, doesn't support rumble.
     #Joystick_NameDesired = "PS4 Controller" #DualShock4 for PS4. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode. Didn't need any special drivers for Windows.
-    Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
+    #Joystick_NameDesired = "DualSense Wireless Controller" #DualSense for PS5. Doesn't work if both the DualSense for PS5 and DualShock for PS4 are both connected via Bluetooth simultaneously. Rumble works when the controller is plugged-in but not in wireless/bluetooth mode.
     #Joystick_NameDesired = "Nintendo Switch Pro Controller"
     #Joystick_NameDesired = DOES NOT WORK: "Controller (Xbox One For Windows)" #Name when plugged-in via USB-C. Rumble works both in wireless/wired modes. Only trigger axes work.
     #Joystick_NameDesired = DOES NOT WORK: "Xbox Series X Controller" #Name when connected via Bluetooth
 
-    Joystick_IntegerIDdesired = -1 #means that we don't care about the IntegerID.
+    #Joystick_NameDesired = "UHID Gamepad Device #1"
+
+    Joystick_IntegerIDdesired = 4 #means that we don't care about the IntegerID.
     Joystick_ShowJustDotMovingFlag = 0
     Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
     Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
     Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay = [9, 10]
     Joystick_PrintInfoForAllDetectedJoysticksFlag = 1
     Joystick_SearchAllJoysticksFlag = 1 #IMPORTANT: if opening by the joystick's name ONLY, then you must set "SearchAllJoysticksFlag" to 1.
-    #################################################
+
+    #For instance, the name "UHID Gamepad Device #4" would yield Joystick_IntegerIDdetected_ExtractedFromJoystickName = 4.
+    #Pygame would still open by Joystick_IntegerIDdetected, but we would match-and-open the detected joystick by Joystick_IntegerIDdetected_ExtractedFromJoystickName.
+    Joystick_AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = 0 #################################################
     #################################################
 
     ################################################# Put the argv parsing AFTER the parameter hard-coding so that we can over-ride it if desired.
@@ -248,6 +249,7 @@ if __name__ == '__main__':
     argparse_Object.add_argument("-i", "--IntegerIDdesired", nargs='?', const='arg_was_not_given', required=False, help="IntegerIDdesired (integer)")
     argparse_Object.add_argument("-n", "--NameDesired", nargs='?', const='arg_was_not_given', required=False, help="NameDesired (string)")
     argparse_Object.add_argument("-s", "--SearchAllJoysticksFlag", nargs='?', const='arg_was_not_given', required=False, help="SearchAllJoysticksFlag (0/1)")
+    argparse_Object.add_argument("-a", "--AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag", nargs='?', const='arg_was_not_given', required=False, help="AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag (0/1)")
     ARGV_Dict = vars(argparse_Object.parse_args())
     print("ARGV_Dict: " + str(ARGV_Dict))
 
@@ -281,6 +283,13 @@ if __name__ == '__main__':
         Joystick_SearchAllJoysticksFlag = str(ARGV_Dict["SearchAllJoysticksFlag"])
 
     print("Joystick_SearchAllJoysticksFlag: " + str(Joystick_SearchAllJoysticksFlag))
+    #################################################
+
+    #################################################
+    if ARGV_Dict["AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag"] != None:
+        Joystick_AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = str(ARGV_Dict["AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag"])
+
+    print("Joystick_AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag: " + str(Joystick_AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag))
     #################################################
 
     #################################################
@@ -479,7 +488,8 @@ if __name__ == '__main__':
                                                                 ("Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay", Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay),
                                                                 ("MainThread_TimeToSleepEachLoop", 0.010),
                                                                 ("Joystick_PrintInfoForAllDetectedJoysticksFlag", Joystick_PrintInfoForAllDetectedJoysticksFlag),
-                                                                ("Joystick_SearchAllJoysticksFlag", Joystick_SearchAllJoysticksFlag)])
+                                                                ("Joystick_SearchAllJoysticksFlag", Joystick_SearchAllJoysticksFlag),
+                                                                ("AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag", Joystick_AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag)])
 
     if USE_Joystick_FLAG == 1 and EXIT_PROGRAM_FLAG == 0:
         try:
