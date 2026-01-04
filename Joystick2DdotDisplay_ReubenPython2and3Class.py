@@ -6,12 +6,15 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision M, 04/28/2025
+Software Revision N, 12/27/2025
 
-Verified working on: Python 2.7, 3.11/12 for Windows 10/11 64-bit, Ubuntu 20.04, and Raspberry Pi 4/5.
+Verified working on: Python 3.11/12/13 for Windows 10/11 64-bit, Ubuntu 20.04, and Raspberry Pi 4/5.
 '''
 
 __author__ = 'reuben.brewer'
+
+##########################################################################################################
+##########################################################################################################
 
 #################################################
 import os
@@ -22,33 +25,15 @@ import math
 import collections
 import inspect #To enable 'TellWhichFileWereIn'
 import threading
+import queue as Queue
 import traceback
 #################################################
 
 #################################################
-if sys.version_info[0] < 3:
-    from Tkinter import * #Python 2
-    import tkFont
-    import ttk
-else:
-    from tkinter import * #Python 3
-    import tkinter.font as tkFont #Python 3
-    from tkinter import ttk
+from tkinter import *
+import tkinter.font as tkFont
+from tkinter import ttk
 #################################################
-
-#################################################
-if sys.version_info[0] < 3:
-    import Queue  # Python 2
-else:
-    import queue as Queue  # Python 3
-#################################################
-
-#################################################
-if sys.version_info[0] < 3:
-    from builtins import raw_input as input
-else:
-    from future.builtins import input as input
-################################################# #"sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
 
 #################################################
 import platform
@@ -57,6 +42,9 @@ if platform.system() == "Windows":
     winmm = ctypes.WinDLL('winmm')
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
 #################################################
+
+##########################################################################################################
+##########################################################################################################
 
 class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
@@ -105,14 +93,6 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
         #########################################################
         if "GUIparametersDict" in setup_dict:
             self.GUIparametersDict = setup_dict["GUIparametersDict"]
-
-            ##########################################
-            if "root" in self.GUIparametersDict:
-                self.root = self.GUIparametersDict["root"]
-            else:
-                print("Joystick2DdotDisplay_ReubenPython2and3Class __init__: ERROR, must pass in 'root'")
-                return
-            ##########################################
 
             ##########################################
             if "GUI_ROW" in self.GUIparametersDict:
@@ -213,80 +193,13 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
         self.ProcessSetupDictInputsTheCanBeLiveChanged(setup_dict)
         #########################################################
         #########################################################
-    
-        #########################################################
-        #########################################################
-        self.myFrame = Frame(self.root)
-
-        self.myFrame.grid(row = self.GUI_ROW,
-                          column = self.GUI_COLUMN,
-                          padx = self.GUI_PADX,
-                          pady = self.GUI_PADY,
-                          rowspan = self.GUI_ROWSPAN,
-                          columnspan= self.GUI_COLUMNSPAN,
-                          sticky = self.GUI_STICKY)
-        #########################################################
-        #########################################################
 
         #########################################################
         #########################################################
-        self.JoystickXYboxCanvas_BorderWidth = 1
-        self.JoystickXYboxCanvas_PointerCircle_Radius = 5
-        self.JoystickXYboxCanvas_PointerLine_Width = 1.2*2.0*self.JoystickXYboxCanvas_PointerCircle_Radius
-
-        ######################################################### Create and draw canvas
-        self.JoystickXYboxCanvas = Canvas(self.myFrame,
-                                         width=self.JoystickXYboxCanvas_HeightAndWidth,
-                                         height=self.JoystickXYboxCanvas_HeightAndWidth) #bg="white", highlightbackground="black"
-
-        self.JoystickXYboxCanvas["highlightthickness"] = 0  #IMPORTANT Remove light grey border around the Canvas
-        self.JoystickXYboxCanvas["bd"] = 0 #IMPORTANT Setting "bd", along with "highlightthickness" to 0 makes the Canvas be in the (0,0) pixel location instead of offset by those thicknesses
-        self.JoystickXYboxCanvas.grid(row=0, column=0, padx=0, pady=0, columnspan=1, rowspan=1)
-        #########################################################
-
-        ######################################################### Create black outline around canvas
-        self.JoystickXYboxCanvas.create_rectangle(0.5*self.JoystickXYboxCanvas_BorderWidth,
-                                                0.5 * self.JoystickXYboxCanvas_BorderWidth,
-                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
-                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
-                                                outline="black",
-                                                fill="white",
-                                                width=self.JoystickXYboxCanvas_BorderWidth,
-                                                tags='BorderRectangle_Tag')
-        #########################################################
-
-        ######################################################### Create cicle
-        self.JoystickXYboxCanvas_PointerCircle = self.CreateAndDrawCircleOnCanvas_CanvasCoord(self.JoystickXYboxCanvas, 0, 0, self.JoystickXYboxCanvas_PointerCircle_Radius, self.PointerColor_Unhighlighted)
-        #########################################################
-
-        #########################################################
-        self.DebuggingInfo_Label = Label(self.myFrame, text="DebuggingInfo_Label", font=("Helvetica", self.JoystickXYboxCanvas_FontSize))
-        self.DebuggingInfo_Label.grid(row=1, column=0, padx=1, pady=1, columnspan=1, rowspan=1)
-        #########################################################
-
-        #########################################################
-        #########################################################
-
-        #########################################################
-        #########################################################
-        time.sleep(0.1)
-        #########################################################
-        #########################################################
-
-        #########################################################
-        #########################################################
-        self.GUI_ready_to_be_updated_flag = 1
         self.OBJECT_CREATED_SUCCESSFULLY_FLAG = 1
         #########################################################
         #########################################################
 
-    #######################################################################################################################
-    #######################################################################################################################
-
-    #######################################################################################################################
-    #######################################################################################################################
-    def __del__(self):
-        pass
     #######################################################################################################################
     #######################################################################################################################
 
@@ -425,6 +338,81 @@ class Joystick2DdotDisplay_ReubenPython2and3Class(Frame): #Subclass the Tkinter 
 
     #######################################################################################################################
     #######################################################################################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
+    def CreateGUIobjects(self, TkinterParent):
+
+        print("Joystick2DdotDisplay_ReubenPython2and3Class, CreateGUIobjects event fired.")
+
+        #################################################
+        #################################################
+        self.root = TkinterParent
+        self.parent = TkinterParent
+        #################################################
+        #################################################
+
+        #########################################################
+        #########################################################
+        self.myFrame = Frame(self.root)
+
+        self.myFrame.grid(row = self.GUI_ROW,
+                          column = self.GUI_COLUMN,
+                          padx = self.GUI_PADX,
+                          pady = self.GUI_PADY,
+                          rowspan = self.GUI_ROWSPAN,
+                          columnspan= self.GUI_COLUMNSPAN,
+                          sticky = self.GUI_STICKY)
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        self.JoystickXYboxCanvas_BorderWidth = 1
+        self.JoystickXYboxCanvas_PointerCircle_Radius = 5
+        self.JoystickXYboxCanvas_PointerLine_Width = 1.2*2.0*self.JoystickXYboxCanvas_PointerCircle_Radius
+
+        ######################################################### Create and draw canvas
+        self.JoystickXYboxCanvas = Canvas(self.myFrame,
+                                         width=self.JoystickXYboxCanvas_HeightAndWidth,
+                                         height=self.JoystickXYboxCanvas_HeightAndWidth) #bg="white", highlightbackground="black"
+
+        self.JoystickXYboxCanvas["highlightthickness"] = 0  #IMPORTANT Remove light grey border around the Canvas
+        self.JoystickXYboxCanvas["bd"] = 0 #IMPORTANT Setting "bd", along with "highlightthickness" to 0 makes the Canvas be in the (0,0) pixel location instead of offset by those thicknesses
+        self.JoystickXYboxCanvas.grid(row=0, column=0, padx=0, pady=0, columnspan=1, rowspan=1)
+        #########################################################
+
+        ######################################################### Create black outline around canvas
+        self.JoystickXYboxCanvas.create_rectangle(0.5*self.JoystickXYboxCanvas_BorderWidth,
+                                                0.5 * self.JoystickXYboxCanvas_BorderWidth,
+                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
+                                                self.JoystickXYboxCanvas_HeightAndWidth - 0.5 * self.JoystickXYboxCanvas_BorderWidth -1, #The -1 accounts for indexing at 0
+                                                outline="black",
+                                                fill="white",
+                                                width=self.JoystickXYboxCanvas_BorderWidth,
+                                                tags='BorderRectangle_Tag')
+        #########################################################
+
+        ######################################################### Create cicle
+        self.JoystickXYboxCanvas_PointerCircle = self.CreateAndDrawCircleOnCanvas_CanvasCoord(self.JoystickXYboxCanvas, 0, 0, self.JoystickXYboxCanvas_PointerCircle_Radius, self.PointerColor_Unhighlighted)
+        #########################################################
+
+        #########################################################
+        self.DebuggingInfo_Label = Label(self.myFrame, text="DebuggingInfo_Label", font=("Helvetica", self.JoystickXYboxCanvas_FontSize))
+        self.DebuggingInfo_Label.grid(row=1, column=0, padx=1, pady=1, columnspan=1, rowspan=1)
+        #########################################################
+
+        #########################################################
+        #########################################################
+
+        #########################################################
+        #########################################################
+        self.GUI_ready_to_be_updated_flag = 1
+        #########################################################
+        #########################################################
+
+    ##########################################################################################################
+    ##########################################################################################################
 
     ##########################################################################################################
     ##########################################################################################################

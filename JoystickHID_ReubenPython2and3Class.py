@@ -6,9 +6,9 @@ reuben.brewer@gmail.com
 www.reubotics.com
 
 Apache 2 License
-Software Revision J, 06/23/2025
+Software Revision K, 12/27/2025
 
-Verified working on: Python 3.11/12 for Windows 10/11 64-bit, Ubuntu 20.04*, and Raspberry Pi Bookworm.
+Verified working on: Python 3.11/12/13 for Windows 10/11 64-bit, Ubuntu 20.04*, and Raspberry Pi Bookworm.
 
 *Note: This code mostly works in Ubuntu 20.04, but the hat yields strange values for some models of joystick
 (such as the VKBsim Gladiator). Running jstest-gtk (sudo apt-get install jstest-gtk) will show you what the
@@ -16,6 +16,14 @@ actual values are that are streaming from the joystick without going through Joy
 '''
 
 __author__ = 'reuben.brewer'
+
+##########################################################################################################
+##########################################################################################################
+
+#########################################################
+import ReubenGithubCodeModulePaths #Replaces the need to have "ReubenGithubCodeModulePaths.pth" within "C:\Anaconda3\Lib\site-packages".
+ReubenGithubCodeModulePaths.Enable()
+#########################################################
 
 #########################################################
 from Joystick2DdotDisplay_ReubenPython2and3Class import *
@@ -32,34 +40,16 @@ import collections
 from copy import * #for deepcopy
 import inspect #To enable 'TellWhichFileWereIn'
 import threading
+import queue as Queue
 import traceback
 import pygame #Install via "pip install pygame" or "pip install pygame_VersionInfo.whl"
 #########################################################
 
 #########################################################
-if sys.version_info[0] < 3:
-    from Tkinter import * #Python 2
-    import tkFont
-    import ttk
-else:
-    from tkinter import * #Python 3
-    import tkinter.font as tkFont #Python 3
-    from tkinter import ttk
+from tkinter import *
+import tkinter.font as tkFont
+from tkinter import ttk
 #########################################################
-
-#########################################################
-if sys.version_info[0] < 3:
-    import Queue  # Python 2
-else:
-    import queue as Queue  # Python 3
-#########################################################
-
-#########################################################
-if sys.version_info[0] < 3:
-    from builtins import raw_input as input
-else:
-    from future.builtins import input as input
-######################################################### "sudo pip3 install future" (Python 3) AND "sudo pip install future" (Python 2)
 
 #########################################################
 import platform
@@ -69,11 +59,14 @@ if platform.system() == "Windows":
     winmm.timeBeginPeriod(1) #Set minimum timer resolution to 1ms so that time.sleep(0.001) behaves properly.
 #########################################################
 
+##########################################################################################################
+##########################################################################################################
+
 class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     #######################################################################################################################
     #######################################################################################################################
-    def __init__(self, setup_dict): #Subclass the Tkinter Frame
+    def __init__(self, SetupDict): #Subclass the Tkinter Frame
 
         print("#################### JoystickHID_ReubenPython2and3Class __init__ starting. ####################")
 
@@ -117,8 +110,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "GUIparametersDict" in setup_dict:
-            self.GUIparametersDict = setup_dict["GUIparametersDict"]
+        if "GUIparametersDict" in SetupDict:
+            self.GUIparametersDict = SetupDict["GUIparametersDict"]
 
             ##########################################
             if "USE_GUI_FLAG" in self.GUIparametersDict:
@@ -127,14 +120,6 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                 self.USE_GUI_FLAG = 0
 
             print("JoystickHID_ReubenPython2and3Class __init__: USE_GUI_FLAG: " + str(self.USE_GUI_FLAG))
-            ##########################################
-
-            ##########################################
-            if "root" in self.GUIparametersDict:
-                self.root = self.GUIparametersDict["root"]
-            else:
-                print("JoystickHID_ReubenPython2and3Class __init__: Error, must pass in 'root'")
-                return
             ##########################################
 
             ##########################################
@@ -247,8 +232,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_PrintInfoForAllDetectedJoysticksFlag" in setup_dict:
-            self.Joystick_PrintInfoForAllDetectedJoysticksFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_PrintInfoForAllDetectedJoysticksFlag", setup_dict["Joystick_PrintInfoForAllDetectedJoysticksFlag"])
+        if "Joystick_PrintInfoForAllDetectedJoysticksFlag" in SetupDict:
+            self.Joystick_PrintInfoForAllDetectedJoysticksFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_PrintInfoForAllDetectedJoysticksFlag", SetupDict["Joystick_PrintInfoForAllDetectedJoysticksFlag"])
         else:
             self.Joystick_PrintInfoForAllDetectedJoysticksFlag = 0
 
@@ -258,8 +243,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_SearchAllJoysticksFlag" in setup_dict:
-            self.Joystick_SearchAllJoysticksFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_SearchAllJoysticksFlag", setup_dict["Joystick_SearchAllJoysticksFlag"])
+        if "Joystick_SearchAllJoysticksFlag" in SetupDict:
+            self.Joystick_SearchAllJoysticksFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_SearchAllJoysticksFlag", SetupDict["Joystick_SearchAllJoysticksFlag"])
         else:
             self.Joystick_SearchAllJoysticksFlag = 0
 
@@ -269,8 +254,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_NameDesired" in setup_dict:
-            self.Joystick_NameDesired = str(setup_dict["Joystick_NameDesired"])
+        if "Joystick_NameDesired" in SetupDict:
+            self.Joystick_NameDesired = str(SetupDict["Joystick_NameDesired"])
         else:
             self.Joystick_NameDesired = ""
 
@@ -280,8 +265,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_IntegerIDdesired" in setup_dict:
-            self.Joystick_IntegerIDdesired = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_IntegerIDdesired", setup_dict["Joystick_IntegerIDdesired"], -1.0, 32.0))
+        if "Joystick_IntegerIDdesired" in SetupDict:
+            self.Joystick_IntegerIDdesired = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_IntegerIDdesired", SetupDict["Joystick_IntegerIDdesired"], -1.0, 32.0))
         else:
             self.Joystick_IntegerIDdesired = -1
 
@@ -291,8 +276,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "NameToDisplay_UserSet" in setup_dict:
-            self.NameToDisplay_UserSet = str(setup_dict["NameToDisplay_UserSet"])
+        if "NameToDisplay_UserSet" in SetupDict:
+            self.NameToDisplay_UserSet = str(SetupDict["NameToDisplay_UserSet"])
         else:
             self.NameToDisplay_UserSet = ""
 
@@ -302,8 +287,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "MainThread_TimeToSleepEachLoop" in setup_dict:
-            self.MainThread_TimeToSleepEachLoop = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("MainThread_TimeToSleepEachLoop", setup_dict["MainThread_TimeToSleepEachLoop"], 0.001, 100000)
+        if "MainThread_TimeToSleepEachLoop" in SetupDict:
+            self.MainThread_TimeToSleepEachLoop = self.PassThroughFloatValuesInRange_ExitProgramOtherwise("MainThread_TimeToSleepEachLoop", SetupDict["MainThread_TimeToSleepEachLoop"], 0.001, 100000)
 
         else:
             self.MainThread_TimeToSleepEachLoop = 0.005
@@ -314,8 +299,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_ShowJustDotMovingFlag" in setup_dict:
-            self.Joystick_ShowJustDotMovingFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_ShowJustDotMovingFlag", setup_dict["Joystick_ShowJustDotMovingFlag"])
+        if "Joystick_ShowJustDotMovingFlag" in SetupDict:
+            self.Joystick_ShowJustDotMovingFlag = self.PassThrough0and1values_ExitProgramOtherwise("Joystick_ShowJustDotMovingFlag", SetupDict["Joystick_ShowJustDotMovingFlag"])
         else:
             self.Joystick_ShowJustDotMovingFlag = 1
 
@@ -328,8 +313,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         #For instance, the name "UHID Gamepad Device #4" would yield Joystick_IntegerIDdetected_ExtractedFromJoystickName = 4.
         #Pygame would still open by Joystick_IntegerIDdetected, but we would match-and-open the detected joystick by Joystick_IntegerIDdetected_ExtractedFromJoystickName.
 
-        if "AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag" in setup_dict:
-            self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = self.PassThrough0and1values_ExitProgramOtherwise("AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag", setup_dict["AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag"])
+        if "AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag" in SetupDict:
+            self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = self.PassThrough0and1values_ExitProgramOtherwise("AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag", SetupDict["AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag"])
         else:
             self.AllowNumberSymbolInJoystickNameDetectedToOverrideJoystickIntegerIDdetectedFlag = 0
 
@@ -389,8 +374,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay" in setup_dict:
-            self.Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay", setup_dict["Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay"], 0, self.Joystick_NumberOfAxesDetected))
+        if "Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay" in SetupDict:
+            self.Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay", SetupDict["Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay"], 0, self.Joystick_NumberOfAxesDetected))
 
         else:
             self.Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay = 0
@@ -401,8 +386,8 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #########################################################
         #########################################################
-        if "Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay" in setup_dict:
-            self.Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay", setup_dict["Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay"], 0, self.Joystick_NumberOfAxesDetected))
+        if "Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay" in SetupDict:
+            self.Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = int(self.PassThroughFloatValuesInRange_ExitProgramOtherwise("Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay", SetupDict["Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay"], 0, self.Joystick_NumberOfAxesDetected))
 
         else:
             self.Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay = 1
@@ -416,9 +401,9 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
         try:
             self.Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay = []
 
-            if "Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay" in setup_dict:
+            if "Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay" in SetupDict:
 
-                TempList = setup_dict["Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay"]
+                TempList = SetupDict["Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay"]
                 if isinstance(TempList, list) == 0:
                     TempList = [TempList]
 
@@ -447,19 +432,6 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
             #########################################################
             self.MainThread_ThreadingObject = threading.Thread(target=self.MainThread, args=())
             self.MainThread_ThreadingObject.start()
-            #########################################################
-            #########################################################
-
-            #########################################################
-            #########################################################
-            if self.USE_GUI_FLAG == 1:
-                self.StartGUI(self.root)
-            #########################################################
-            #########################################################
-
-            #########################################################
-            #########################################################
-            time.sleep(0.25)
             #########################################################
             #########################################################
 
@@ -1022,22 +994,14 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
     ##########################################################################################################
     ##########################################################################################################
-    def StartGUI(self, GuiParent):
+    def CreateGUIobjects(self, TkinterParent):
 
-        self.GUI_Thread(GuiParent)
-    ##########################################################################################################
-    ##########################################################################################################
-
-    ##########################################################################################################
-    ##########################################################################################################
-    def GUI_Thread(self, parent):
-
-        print("Starting the GUI_Thread for JoystickHID_ReubenPython2and3Class object.")
+        print("JoystickHID_ReubenPython2and3Class, CreateGUIobjects event fired.")
 
         #################################################
         #################################################
-        self.root = parent
-        self.parent = parent
+        self.root = TkinterParent
+        self.parent = TkinterParent
         #################################################
         #################################################
 
@@ -1079,9 +1043,11 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
 
         #################################################
         #################################################
-        self.Joystick2DdotDisplay_ReubenPython2and3ClassObject_GUIparametersDict = dict([("root", self.myFrame), ("GUI_ROW", 0), ("GUI_COLUMN", 1), ("GUI_PADX", 1), ("GUI_PADY", 1), ("GUI_ROWSPAN", 1), ("GUI_COLUMNSPAN", 1)])
-        self.Joystick2DdotDisplay_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", self.Joystick2DdotDisplay_ReubenPython2and3ClassObject_GUIparametersDict)])
-        self.Joystick2DdotDisplay_ReubenPython2and3ClassObject = Joystick2DdotDisplay_ReubenPython2and3Class(self.Joystick2DdotDisplay_ReubenPython2and3ClassObject_setup_dict)
+        self.Joystick2DdotDisplay_GUIparametersDict = dict([("GUI_ROW", 0), ("GUI_COLUMN", 1), ("GUI_PADX", 1), ("GUI_PADY", 1), ("GUI_ROWSPAN", 1), ("GUI_COLUMNSPAN", 1)])
+        self.Joystick2DdotDisplay_SetupDict = dict([("GUIparametersDict", self.Joystick2DdotDisplay_GUIparametersDict)])
+        self.Joystick2DdotDisplay_Object = Joystick2DdotDisplay_ReubenPython2and3Class(self.Joystick2DdotDisplay_SetupDict)
+
+        self.Joystick2DdotDisplay_Object.CreateGUIobjects(TkinterParent=self.myFrame)
         #################################################
         #################################################
 
@@ -1191,11 +1157,11 @@ class JoystickHID_ReubenPython2and3Class(Frame): #Subclass the Tkinter Frame
                             break
                     #########################
 
-                    self.Joystick2DdotDisplay_ReubenPython2and3ClassObject.UpdateDotCoordinatesAndDotColor(self.Joystick_Axis_Value_List[self.Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay],
+                    self.Joystick2DdotDisplay_Object.UpdateDotCoordinatesAndDotColor(self.Joystick_Axis_Value_List[self.Joystick_Axis_Index_ToDisplayAsHorizontalAxisOn2DdotDisplay],
                                                                                                            self.Joystick_Axis_Value_List[self.Joystick_Axis_Index_ToDisplayAsVerticalAxisOn2DdotDisplay],
                                                                                                            Joystick_Button_IndexList_ToDisplayAsDotColorOn2DdotDisplay_DigitallyORed)
 
-                    self.Joystick2DdotDisplay_ReubenPython2and3ClassObject.GUI_update_clock()
+                    self.Joystick2DdotDisplay_Object.GUI_update_clock()
                     #######################################################
 
                     #######################################################

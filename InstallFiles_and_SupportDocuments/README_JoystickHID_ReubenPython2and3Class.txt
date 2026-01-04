@@ -12,11 +12,11 @@ www.reubotics.com
 
 Apache 2 License
 
-Software Revision J, 06/23/2025
+Software Revision K, 12/27/2025
 
 Verified working on:
 
-Python 3.11/12.
+Python 3.11/12/13.
 
 Windows 10/11 64-bit
 
@@ -61,19 +61,19 @@ Have tested on the following joysticks:
 
 ########################### Python module installation instructions, all OS's
 
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies: ['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'pygame']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies: ['Joystick2DdotDisplay_ReubenPython2and3Class', 'pygame', 'ReubenGithubCodeModulePaths']
 
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['MyPrint_ReubenPython2and3Class']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_TestProgram: ['keyboard', 'MyPrint_ReubenPython2and3Class', 'ReubenGithubCodeModulePaths']
 
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: ['future.builtins']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_NestedLayers: []
 
-JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All:['future.builtins', 'Joystick2DdotDisplay_ReubenPython2and3Class', 'MyPrint_ReubenPython2and3Class', 'pygame']
+JoystickHID_ReubenPython2and3Class, ListOfModuleDependencies_All:['Joystick2DdotDisplay_ReubenPython2and3Class', 'keyboard', 'MyPrint_ReubenPython2and3Class', 'pygame', 'ReubenGithubCodeModulePaths']
 
 #https://github.com/Reuben-Brewer/Joystick2DdotDisplay_ReubenPython2and3Class
 
 from Joystick2DdotDisplay_ReubenPython2and3Class import *
 
-#"pip install pygame" or "pip install pygame_VersionInfo.whl"
+#"pip install pygame==2.6.1" or "pip install pygame_VersionInfo.whl"
 
 import pygame
 
